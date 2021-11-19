@@ -1,0 +1,14 @@
+#####
+# Artifact Description: Process security oriented host-survey "safety checks" for CloudCred, CredEnum, CredGuard, PackageCred, WindowsVault
+# Artifact ID: AID2105052112
+# Artifact Source Link: <NONE>
+# Artifact Notes:
+#   o CloudCredentials       - AWS/Google/Azure/Bluemix cloud credential files
+#   o CredEnum               - Enumerates the current user's saved credentials using CredEnumerate()
+#   o CredGuard              - CredentialGuard configuration
+#   o SecPackageCreds        - Obtains credentials from security packages
+#   o WindowsVault           - Credentials saved in the Windows Vault (i.e. logins from Internet Explorer and Edge).
+#####
+commands:
+- Invoke-BGAnalyzer -AddException
+- Invoke-BGAnalyzer -FilterType 'CloudCred|CredEnum|CredGuard|PackageCred|WindowsVault'

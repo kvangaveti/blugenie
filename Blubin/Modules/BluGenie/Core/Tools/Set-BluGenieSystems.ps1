@@ -8,6 +8,9 @@
         .DESCRIPTION
             Set-BluGenieSystems is an add-on to manage the System list in the BluGenie Console
 
+            Computer Objects are the list of computers you want to action an event on.
+            You can add Computer Objects manuall, throught text files, and throught AD Groups.
+
         .PARAMETER Add
             Description: Add computer objects to the global systems catalogue
             Notes:  To parse a file for a list of computers use the "File:" prefix
@@ -158,7 +161,10 @@
 
                 [Int[]]$RemoveIndex,
 
-                [Switch]$RemoveAll
+                [Switch]$RemoveAll,
+
+                [Alias('Help')]
+                [Switch]$Walkthrough
             )
         #endregion Parameters
 
@@ -188,21 +194,21 @@
 
                 If
                 (
-                    Test-Path -Path Function:\Invoke-BluGenieWalkThrough
+                    Test-Path -Path Function:\Invoke-WalkThrough
                 )
                 {
                     If
                     (
-                        $Function -eq 'Invoke-BluGenieWalkThrough'
+                        $Function -eq 'Invoke-WalkThrough'
                     )
                     {
                         #Disable Invoke-BluGenieWalkThrough looping
-                        Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function -RemoveRun }
+                        Invoke-Command -ScriptBlock { Invoke-WalkThrough -Name $Function -RemoveRun }
                         Return
                     }
                     Else
                     {
-                        Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function }
+                        Invoke-Command -ScriptBlock { Invoke-WalkThrough -Name $Function }
                         Return
                     }
                 }

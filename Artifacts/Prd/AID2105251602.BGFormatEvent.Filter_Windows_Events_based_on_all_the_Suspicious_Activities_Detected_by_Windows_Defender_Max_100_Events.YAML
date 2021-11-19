@@ -1,0 +1,42 @@
+#####
+# Artifact Description: Filter the Windows Defender Suspicious  Activity Max 100 Events
+# Artifact ID: AID2105251602
+# Artifact Source Link: <NONE>
+# Artifact Associated MITRE ATT&CK Technique: <NONE>
+# Artifact Compatible OS: Windows 10, Windows Server 2016, Windows Server 2019
+# Artifact Compatible Posh: 5,.*
+# Artifact Notes:
+#   o Artifacts Returned      - ID, MachineName, Message
+#   o Samples Property Table for Properties that can be queried
+#        * Message                  : (Full/Normal Windows Event Message)
+#        * MsgActionStatus                            : No additional actions required               
+#        * Msghttps://go.microsoft.com/fwlink/?linkid : 37020&name
+#        * Id                                         : 1117
+#        * Version                                    : 0
+#        * Qualifiers                                 : 
+#        * Level                                      : 4
+#        * Task                                       : 0
+#        * Opcode                                     : 0
+#        * Keywords                                   : -9223372036854775808
+#        * RecordId                                   : 2608
+#        * ProviderName                               : Microsoft-Windows-Windows Defender
+#        * ProviderId                                 : 11cd958a-c507-4ef3-b3f2-5fd9dfbd2c78
+#        * LogName                                    : Microsoft-Windows-Windows Defender/Operational
+#        * ProcessId                                  : 7496
+#        * ThreadId                                   : 7800
+#        * MachineName                                : WIN-OMFUCC4K0A0.bludev.local
+#        * UserId                                     : S-1-5-18
+#        * TimeCreated                                : 5/18/2021 12:53:08 AM
+#        * ActivityId                                 : a9b660cf-abd3-47bf-90d7-8f4f5142b1df
+#        * RelatedActivityId                          : 
+#        * ContainerLog                               : Microsoft-Windows-Windows Defender/Operational
+#        * MatchedQueryIds                            : {}
+#        * Bookmark                                   : System.Diagnostics.Eventing.Reader.EventBookmark
+#        * LevelDisplayName                           : Information
+#        * OpcodeDisplayName                          : Info
+#        * TaskDisplayName                            : 
+#        * KeywordsDisplayNames                       : {}
+#        * Properties                                 : {System.Diagnostics.Eventing.Reader.EventProperty, System.Diagnostics.Eventing.Reader.EventProperty, System.Diagnostics.Eventing.Reader.EventProperty, 
+#####
+commands:
+-  Format-BluGenieEvent -Event (Get-WinEvent -FilterHashtable @{logname='Microsoft-Windows-Windows Defender/Operational'; id='1006','1007','1116','1117'} -MaxEvents 100) | Select-Object -Property Id, MachineName, Message

@@ -1,0 +1,11 @@
+#####
+# Artifact Description: Query Hotfixes and MicrosoftUpdates for a specific KB
+# Artifact ID: AID2105052130
+# Artifact Source Link: <NONE>
+# Artifact Notes:
+#   o Hotfixes               - Installed hotfixes (via WMI)
+#   o MicrosoftUpdates       - All Microsoft updates (via COM)
+#####
+commands:
+- Invoke-BGAnalyzer -AddException
+- Invoke-BGAnalyzer -FilterType 'Hotfix|Update' -FilterData 'KB2479943'

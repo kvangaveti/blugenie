@@ -14,12 +14,12 @@ Function Get-BluGenieAutoRuns
         Description: ToolPath for the AutoRunSC.exe
         Notes: The default ToolPath is ( .\Tools\SysinternalsSuite ) with a backup path of ( $env:Windir\Temp )
         Alias:
-        ValidateSet:
+        ValidateSet:  
 
     .PARAMETER Algorithm
-        Description:  Specifies the cryptographic hash to use for computing the hash value of the contents of the specified file.
+        Description:  Specifies the cryptographic hash to use for computing the hash value of the contents of the specified file. 
         Notes:  The acceptable values for this parameter are:
-
+    
                     - SHA1
                     - SHA256
                     - SHA384
@@ -27,20 +27,20 @@ Function Get-BluGenieAutoRuns
                     - MACTripleDES
                     - MD5 = (Default)
                     - RIPEMD160
-        Alias:
-        ValidateSet: 'MACTripleDES','MD5','RIPEMD160','SHA1','SHA256','SHA384','SHA512'
-
+        Alias: 
+        ValidateSet: 'MACTripleDES','MD5','RIPEMD160','SHA1','SHA256','SHA384','SHA512' 
+		
 	.PARAMETER Signature
-        Description: Query Signature information
+        Description: Query Signature information 
         Notes:  This will slow down the query
         Alias:
-        ValidateSet
-
+        ValidateSet: 
+		
 	.PARAMETER HideSigned
-        Description: Hide signed files to help quickly identify 3rd party or unsigned entries
-        Notes:
+        Description: Hide signed files to help quickly identify 3rd party or unsigned entries 
+        Notes:  
         Alias:
-        ValidateSet:
+        ValidateSet: 'Item1','Item2','Item3' 
 
     .PARAMETER UseCache
         Description: Cache found objects to disk.  This is to not over tax Memory resources with found artifacts
@@ -88,25 +88,24 @@ Function Get-BluGenieAutoRuns
         Description: Garbage Collection in Powershell to Speed up Scripts and help lower memory consumption
         Notes: This is enabled by default.  To disable use -ClearGarbageCollecting:$False
         Alias:
-        ValidateSet:
-
+        ValidateSet:		
     .PARAMETER Walkthrough
         Description:  Start the dynamic help menu system to help walk through the current command and all of the parameters
-        Notes:
+        Notes:  
         Alias: Help
-        ValidateSet:
+        ValidateSet: 
 
     .PARAMETER ReturnObject
         Description: Return information as an Object
         Notes: By default the data is returned as a Hash Table
-        Alias:
-        ValidateSet:
+        Alias: 
+        ValidateSet: 
 
     .PARAMETER OutUnEscapedJSON
         Description: Remove UnEsacped Char from the JSON information.
         Notes: This will beautify json and clean up the formatting.
-        Alias:
-        ValidateSet:
+        Alias: 
+        ValidateSet: 
 
     .PARAMETER OutYaml
         Description: Return detailed information in Yaml Format
@@ -121,36 +120,36 @@ Function Get-BluGenieAutoRuns
         ValidateSet: 'Table','Custom','CustomModified','None','JSON','OutUnEscapedJSON','CSV', 'Yaml'
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns
+	    Command: Get-BluGenieAutoRuns
         Description: Report on currently configured auto-start applications as well as the full list of Registry and file system locations available for auto-start configuration
-        Notes:
+        Notes: 
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns -Algorithm SHA256
+	    Command: Get-BluGenieAutoRuns -Algorithm SHA256
         Description: Report on currently configured auto-start information, also display the Hash Algorithm in "SHA256"
         Notes: The Hash Algorithm will be set to "SHA256".  The default is "MD5"
-
+		
 	.EXAMPLE
-        Command: Get-BluGenieAutoRuns -Signature -HideSigned Microsoft
+	    Command: Get-BluGenieAutoRuns -Signature -HideSigned Microsoft
         Description: Report on currently configured auto-start information that do not have an Authorized Signature from Microsoft.
         Notes: This report will quickly identify any 3rd party or unsigned entries.
-                To display Signature information you need to use the (-Signature) switch
-
+			   To display Signature information you need to use the (-Signature) switch
+		
 	.EXAMPLE
-        Command: Get-BluGenieAutoRuns -Signature -HideSigned All
+	    Command: Get-BluGenieAutoRuns -Signature -HideSigned All
         Description: Report on currently configured auto-start information that do not have an Authorized Signature.
         Notes: This report will quickly identify any 3rd party or unsigned entries.
-                To display Signature information you need to use the (-Signature) switch
-
+			   To display Signature information you need to use the (-Signature) switch
+		
 	.EXAMPLE
-        Command: Get-BluGenieAutoRuns -Signature
+	    Command: Get-BluGenieAutoRuns -Signature
         Description: Report on currently configured auto-start information with Authorized Signature Information.
-        Notes:
-
+        Notes: 
+		
 	.EXAMPLE
-        Command: Get-BluGenieAutoRuns -ToolPath 'C:\Temp\AutoRunSC.exe'
+	    Command: Get-BluGenieAutoRuns -ToolPath 'C:\Temp\AutoRunSC.exe'
         Description: Locate the AutoRun tool under C:\Temp and Report on currently configured auto-start information
-        Notes:
+        Notes: 
 
     .EXAMPLE
         Command: Get-BluGenieAutoRuns -UseCache
@@ -179,22 +178,22 @@ Function Get-BluGenieAutoRuns
 
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns -Help
+	    Command: Get-BluGenieAutoRuns -Help
         Description: Call Help Information
         Notes: If Help / WalkThrough is setup as a parameter, this script will be called to setup the Dynamic Help Menu if not the normal Get-Help will be called with the -Full parameter
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns -WalkThrough
+	    Command: Get-BluGenieAutoRuns -WalkThrough
         Description: Call Help Information [2]
         Notes: If Help / WalkThrough is setup as a parameter, this script will be called to setup the Dynamic Help Menu if not the normal Get-Help will be called with the -Full parameter
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns -OutUnEscapedJSON
+	    Command: Get-BluGenieAutoRuns -OutUnEscapedJSON
         Description: <command_here> and Return Output as UnEscaped JSON format
         Notes:  The OutUnEscapedJSON is used to beatify the JSON return and not Escape any Characters.  Normal return data is a Hash Table.
 
     .EXAMPLE
-        Command: Get-BluGenieAutoRuns -ReturnObject
+	    Command: Get-BluGenieAutoRuns -ReturnObject
         Description: <command_here> and Return Output an Object
         Notes:  The ReturnObject is used to return a PowerShell Object.  Normal return data is a Hash Table.
 
@@ -213,12 +212,12 @@ Function Get-BluGenieAutoRuns
         Command: Get-BluGenieAutoRuns -SearchPath Temp -Recurse -ReturnObject -FormatView Yaml
         Description: Output PSObject information in Yaml format
         Notes:  Current formats supported by default are ('Table','Custom','CustomModified','None','JSON','OutUnEscapedJSON','CSV', 'Yaml', 'XML')
-        Default is set to (None) and normal PSObject.
+     Default is set to (None) and normal PSObject.
 
 
     .OUTPUTS
         TypeName: System.Collections.Hashtable
-
+		
 		- Sample Data -
             Time                  : 8/20/2018 4:09 PM
             Entry Location        : HKLM\Software\Wow6432Node\Microsoft\Office\Excel\Addins
@@ -245,7 +244,7 @@ Function Get-BluGenieAutoRuns
         * Original Author           : Michael Arroyo
         * Original Build Version    : 1910.1001
         * Latest Author             : Dubey Ravi Vinod
-        * Latest Build Version      : 21.06.2201
+        * Latest Build Version      : 21.02.2301
         * Comments                  :
         • Dependencies              :
             o  Invoke-BluGenieWalkThrough or Invoke-WalkThrough - interactive help menu system
@@ -255,7 +254,6 @@ Function Get-BluGenieAutoRuns
             o  Clear-BlugenieMemory or Clear-Memory or CM - Free up any garbage collecting that Powershell is managing
             o  ConvertFrom-Yaml - Convert From Yaml
             o  Invoke-SQLiteBulkCopy - Inject Bulk data into a SQL Lite Database
-#>
 
 #region Build Notes
 
@@ -275,28 +273,26 @@ Function Get-BluGenieAutoRuns
                 • [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended debugging info
                                     unless you manually set the -Verbose parameter.
                 • [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
-    ~ 21.05.1301• [Ravi Vinod Dubey] Change the script to check the AutoRuns tools in ..\Tools\SysinternalsSuite\.
-                • [Ravi Vinod Dubey] Change the script to check the AutoRuns $ToolPath.
-	~ 21.06.2201• [Michael Arroyo] Updated the $ArrToolPath Array list.  Removed paths that are no longer needed.
-				• [Michael Arroyo] Updated the HideSigned PARAMETER help information.  Removed ValidateSet information.
-				• [Michael Arroyo] Removed all parameter position flags.  These options are no longer needed.
-                • [Michael Arroyo] Updated the function based on the PSScriptAnalyzerSettings configuration.
-                • [Michael Arroyo] Added funtion Alias ( Get-BGAutoRuns )
+                • [Ravi Vinod Dubey] Change the script to check the AutoRuns tools in ..\Tools\SysinternalsSuite\
 #>
 #endregion Build Notes
 
 
     [cmdletbinding()]
-    [Alias('Get-AutoRuns','Get-BGAutoRuns')]
+    [Alias('Get-AutoRuns')]
     Param
     (
+        [Parameter(Position = 0)]
         [string]$ToolPath = $(Join-Path -Path $ToolsDirectory -ChildPath 'SysinternalsSuite'),
 
+        [Parameter(Position=1)]
         [ValidateSet("MACTripleDES", "MD5", "RIPEMD160", "SHA1", "SHA256", "SHA384", "SHA512")]
         [string]$Algorithm = "MD5",
-
+		
+		[Parameter(Position = 2)]
         [switch]$Signature,
 
+        [Parameter(Position = 3)]
         [ValidateSet('Microsoft','All')]
         [string]$HideSigned,
 
@@ -333,56 +329,56 @@ Function Get-BluGenieAutoRuns
     )
 
     #region WalkThrough (Dynamic Help)
+    If
+    (
+        $Walkthrough
+    )
+    {
         If
         (
-            $Walkthrough
+            $($PSCmdlet.MyInvocation.InvocationName)
+        )
+        {
+            $Function = $($PSCmdlet.MyInvocation.InvocationName)
+        }
+        Else
+        {
+            If
+            (
+                $Host.Name -match 'ISE'
+            )
+            {
+                $Function = $(Split-Path -Path $psISE.CurrentFile.FullPath -Leaf) -replace '((?:.[^.\r\n]*){1})$'
+            }
+        }
+
+        If
+        (
+            Test-Path -Path Function:\Invoke-BluGenieWalkThrough
         )
         {
             If
             (
-                $($PSCmdlet.MyInvocation.InvocationName)
+                $Function -eq 'Invoke-BluGenieWalkThrough'
             )
             {
-                $Function = $($PSCmdlet.MyInvocation.InvocationName)
+                #Disable Invoke-BluGenieWalkThrough looping
+                Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function -RemoveRun }
+                Return
             }
             Else
             {
-                If
-                (
-                    $Host.Name -match 'ISE'
-                )
-                {
-                    $Function = $(Split-Path -Path $psISE.CurrentFile.FullPath -Leaf) -replace '((?:.[^.\r\n]*){1})$'
-                }
-            }
-
-            If
-            (
-                Test-Path -Path Function:\Invoke-BluGenieWalkThrough
-            )
-            {
-                If
-                (
-                    $Function -eq 'Invoke-BluGenieWalkThrough'
-                )
-                {
-                    #Disable Invoke-BluGenieWalkThrough looping
-                    Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function -RemoveRun }
-                    Return
-                }
-                Else
-                {
-                    Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function }
-                    Return
-                }
-            }
-            Else
-            {
-                Get-Help -Name $Function -Full
+                Invoke-Command -ScriptBlock { Invoke-BluGenieWalkThrough -Name $Function }
                 Return
             }
         }
-    #endregion WalkThrough (Dynamic Help)
+        Else
+        {
+            Get-Help -Name $Function -Full
+            Return
+        }
+    }
+     #endregion WalkThrough (Dynamic Help)
 
     #region Create Return hash
         $HashReturn = @{}
@@ -390,6 +386,7 @@ Function Get-BluGenieAutoRuns
         $StartTime = $(Get-Date -ErrorAction SilentlyContinue)
         $HashReturn['GetAutoRuns'].StartTime = $($StartTime).DateTime
         $HashReturn['GetAutoRuns']['AutoRunItems'] = @()
+		$HashReturn['GetAutoRuns']['AutoRunTotal'] = $null
 		$HashReturn['GetAutoRuns']['ToolCheck'] = $false
 		$HashReturn['GetAutoRuns']['ToolPath'] = $null
         $HashReturn['GetAutoRuns'].ParsedCount = 0
@@ -399,6 +396,7 @@ Function Get-BluGenieAutoRuns
     #region Parameter Set Results
         $HashReturn['GetAutoRuns'].ParameterSetResults = $PSBoundParameters
     #endregion Parameter Set Results
+
 
     #region Dynamic parameter update
         If
@@ -489,12 +487,12 @@ Function Get-BluGenieAutoRuns
                     Image_Path            TEXT,
                     Version               TEXT,
                     Launch_String         TEXT,
-                    Signature_Comment     TEXT,
-                    Signature_FileVersion TEXT,
-                    Signature_Description TEXT,
-                    Signature_Date        TEXT,
-                    Signature_Company     TEXT,
-                    Signature_Publisher   TEXT,
+                    Signature_Comment     TEXT, 
+                    Signature_FileVersion TEXT, 
+                    Signature_Description TEXT, 
+                    Signature_Date        TEXT, 
+                    Signature_Company     TEXT, 
+                    Signature_Publisher   TEXT, 
                     Signature_Verified    TEXT"
 
 
@@ -528,16 +526,13 @@ Function Get-BluGenieAutoRuns
 
 	#region Tool Check
         $Error.Clear()
-        $CurTool = 'AutoRunSc.exe'
-        $NestedToolPath = 'SysinternalsSuite'
-        $ResolveToolDirectory = Resolve-Path -Path $ToolsDirectory | Select-Object -ExpandProperty Path
 		$ArrToolPath = @(
-			$('{0}\{1}' -f $ToolPath, $CurTool),
-            $('{0}\Windows\Temp\{1}}' -f $env:SystemDrive, $CurTool),
-			$('{0}\{1}' -f $env:Temp, $CurTool),
-			".\Blubin\Modules\Tools\$NestedToolPath\$CurTool",
-            "..\Tools\$NestedToolPath\$CurTool",
-			$('{0}\{1}\{2}' -f $ResolveToolDirectory, $NestedToolPath, $CurTool)
+			$($ToolPath +'\' + 'AutoRunSc.exe'),
+	        $('{0}\AutoRunSc.exe' -f $(Get-LiteralPath -Path $($BGTools | Where-Object -FilterScript { $_.'Name' -eq 'AutoRunSc.exe' } | Select-Object -ExpandProperty RemoteDestination) -ErrorAction SilentlyContinue)),
+			$($ToolsConfig.CopyTools  | Where-Object -FilterScript { $_.'Name' -eq 'AutoRunSc.exe' } | Select-Object -ExpandProperty FullPath),
+			$('{0}\Windows\Temp\AutoRunSc.exe' -f $env:SystemDrive),
+			$('{0}\AutoRunSc.exe' -f $env:Temp),
+			'..\Tools\SysinternalsSuite\AutoRunSc.exe'
 		)
 
         foreach
@@ -565,147 +560,154 @@ Function Get-BluGenieAutoRuns
     #endregion Tool Check
 
     #region Main
-        $ArrTempData = @()
 
+        $ArrTempData = @()
+        
 		If
 		(
 			$HashReturn['GetAutoRuns']['ToolCheck']
 		)
 		{
-            #region Pull Main AutoRun information
-                Try
-                {
-                    $AutoRunOptions = '-nobanner -accepteula -a * -c' #NoBanner, Export to CSV
-                    $AutoRunObj = Invoke-Expression -Command $('{0} {1}' -f $CurToolPath,$AutoRunOptions) -ErrorAction SilentlyContinue | ConvertFrom-Csv -ErrorAction SilentlyContinue
-                }
-                Catch
-                {
-                }
-            #endregion Pull Main AutoRun information
-
+		    #region Pull Main AutoRun information
+		    Try
+		    {
+		        $AutoRunOptions = '-nobanner -accepteula -a * -c' #NoBanner, Export to CSV
+		        $AutoRunObj = Invoke-Expression -Command $('{0} {1}' -f $CurToolPath,$AutoRunOptions) -ErrorAction SilentlyContinue | ConvertFrom-Csv -ErrorAction SilentlyContinue
+		    }
+		    Catch
+		    {
+		    }
+		    #endregion Pull Main AutoRun information
+			   
 			#region Add Hash Information to Object
-                $HashReturn.GetAutoRuns.ParsedCount = $AutoRunObj | Measure-Object -ErrorAction Stop  | `
-                Select-Object -ExpandProperty 'Count' -ErrorAction Stop
 
-                $AutoRunObj | ForEach-Object `
-                -Process `
-                {
-                    $CurHashItem = $_
-                    $CurHashItem | Add-Member -MemberType NoteProperty -Name Hash -Value $(Get-HashInfo -Path $(Get-LiteralPath -Path $CurHashItem.'Image Path' -ErrorAction SilentlyContinue) -Algorithm $Algorithm -ErrorAction SilentlyContinue) -Force -ErrorAction SilentlyContinue
-                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Entry_Location' -Value $($CurHashItem.'Entry Location') -Force -ErrorAction SilentlyContinue
-                    $CurHashItem.PSObject.Properties.Remove('Entry Location')
-                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Image_Path' -Value $($CurHashItem.'Image Path') -Force -ErrorAction SilentlyContinue
-                    $CurHashItem.PSObject.Properties.Remove('Image Path')
-                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Launch_String' -Value $($CurHashItem.'Launch String') -Force -ErrorAction SilentlyContinue
-                    $CurHashItem.PSObject.Properties.Remove('Launch String')
+            $HashReturn.GetAutoRuns.ParsedCount = $AutoRunObj | Measure-Object -ErrorAction Stop  | `
+			Select-Object -ExpandProperty 'Count' -ErrorAction Stop
+		   
+            $AutoRunObj | ForEach-Object `
+		    -Process `
+		    {
+		        $CurHashItem = $_
+		        $CurHashItem | Add-Member -MemberType NoteProperty -Name Hash -Value $(Get-HashInfo -Path $(Get-LiteralPath -Path $CurHashItem.'Image Path' -ErrorAction SilentlyContinue) -Algorithm $Algorithm -ErrorAction SilentlyContinue) -Force -ErrorAction SilentlyContinue
+                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Entry_Location' -Value $($CurHashItem.'Entry Location') -Force -ErrorAction SilentlyContinue
+                $CurHashItem.PSObject.Properties.Remove('Entry Location')
+                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Image_Path' -Value $($CurHashItem.'Image Path') -Force -ErrorAction SilentlyContinue
+                $CurHashItem.PSObject.Properties.Remove('Image Path')
+                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Launch_String' -Value $($CurHashItem.'Launch String') -Force -ErrorAction SilentlyContinue
+                $CurHashItem.PSObject.Properties.Remove('Launch String')
 
-                    #region Process Signature Information
-                        If
-                        (
-                            $Signature
-                            )
-                        {
-                            Try
-                            {
-                                $CurSignature = $(Get-Signature -Path $(Get-LiteralPath -Path $CurHashItem.'Image_Path' -ErrorAction Stop) -Algorithm $Algorithm)
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Comment' -Value $($CurSignature).Comment -Force -ErrorAction SilentlyContinue
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_FileVersion' -Value $($CurSignature).'File Version' -Force -ErrorAction SilentlyContinue
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Description' -Value $($CurSignature).Description -Force -ErrorAction SilentlyContinue
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Date' -Value $($CurSignature).Date -Force -ErrorAction SilentlyContinue
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Company' -Value $($CurSignature).Company -Force -ErrorAction SilentlyContinue
-                                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Publisher' -Value $($CurSignature).Publisher -Force -ErrorAction SilentlyContinue
+                #region Process Signature Information
+		        If
+		        (
+		            $Signature
+		        )
+                {		                  
+		            Try
+		            {
+		                $CurSignature = $(Get-Signature -Path $(Get-LiteralPath -Path $CurHashItem.'Image_Path' -ErrorAction Stop) -Algorithm $Algorithm)
+                        $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Comment' -Value $($CurSignature).Comment -Force -ErrorAction SilentlyContinue
+		                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_FileVersion' -Value $($CurSignature).'File Version' -Force -ErrorAction SilentlyContinue
+		                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Description' -Value $($CurSignature).Description -Force -ErrorAction SilentlyContinue
+		                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Date' -Value $($CurSignature).Date -Force -ErrorAction SilentlyContinue
+		                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Company' -Value $($CurSignature).Company -Force -ErrorAction SilentlyContinue
+		                $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Publisher' -Value $($CurSignature).Publisher -Force -ErrorAction SilentlyContinue
+                                
+		                If
+		                (
+		                    $($CurSignature).Verified
+		                )
+		                {
+		                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Verified' -Value $($CurSignature).Verified -Force -ErrorAction SilentlyContinue
+		                }
+		                Else
+		                {
+		                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Verified' -Value 'N/A' -Force -ErrorAction SilentlyContinue
+		                }
+                                
+		            }
+		            Catch
+		           {
+                       $CurSignature = $null
+		           }                               
+               }
+               #endregion Process Signature Information
 
-                                If
-                                (
-                                    $($CurSignature).Verified
-                                )
-                                {
-                                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Verified' -Value $($CurSignature).Verified -Force -ErrorAction SilentlyContinue
-                                }
-                                Else
-                                {
-                                    $CurHashItem | Add-Member -MemberType NoteProperty -Name 'Signature_Verified' -Value 'N/A' -Force -ErrorAction SilentlyContinue
-                                }
 
-                            }
-                            Catch
-                            {
-                                $CurSignature = $null
-                            }
-                        }
-                    #endregion Process Signature Information
+               #region Setup Caching
+					   
+			    If
+			    (
+	         	    $UseCache
+		        )
+			    {
+			        '---' | Out-File -FilePath $CachePath -Append -Force
+				    $CurHashItem | ConvertTo-Yaml | Out-File $CachePath -Append -Force
+	            }
+			    Else
+			    {
+				    $ArrTempData += $CurHashItem
+			    }
+                If
+			    (
+				    $UpdateDB
+				)
+				{
+				    If
+				    (
+				        $ForceDBUpdate
+				    )
+				    {
+					    Invoke-SQLiteBulkCopy -DataSource $HSqlite.Database -DataTable $($CurHashItem | `
+					    Out-DataTable) -Table $HSqlite.TableName -Confirm:$false  -ConflictClause Replace
+					}
+					Else
+					{
+					    Invoke-SQLiteBulkCopy -DataSource $HSqlite.Database -DataTable $($CurHashItem | `
+					    Out-DataTable) -Table $HSqlite.TableName -Confirm:$false -ConflictClause Ignore
+					}
+				 }
 
-                    #region Setup Caching
-                        If
-                        (
-                            $UseCache
-                        )
-                        {
-                            '---' | Out-File -FilePath $CachePath -Append -Force
-                            $CurHashItem | ConvertTo-Yaml | Out-File $CachePath -Append -Force
-                        }
-                        Else
-                        {
-                            $ArrTempData += $CurHashItem
-                        }
-                        If
-                        (
-                            $UpdateDB
-                        )
-                        {
-                            If
-                            (
-                                $ForceDBUpdate
-                            )
-                            {
-                                Invoke-SQLiteBulkCopy -DataSource $HSqlite.Database -DataTable $($CurHashItem | `
-                                Out-DataTable) -Table $HSqlite.TableName -Confirm:$false  -ConflictClause Replace
-                            }
-                            Else
-                            {
-                                Invoke-SQLiteBulkCopy -DataSource $HSqlite.Database -DataTable $($CurHashItem | `
-                                Out-DataTable) -Table $HSqlite.TableName -Confirm:$false -ConflictClause Ignore
-                            }
-                        }
-
-                        $CurHashItem = $null
-                    #endregion Setup Caching
-                }
-            #endregion Add Hash Information to Object
+				$CurHashItem = $null
+			  #endregion Setup Caching 
+             }              
+		            
+		    #endregion Add Hash Information to Object
 
             #region Service Count
-                If
-                (
-                    $ArrTempData
-                )
-                {
-                    $HashReturn['GetAutoRuns']['AutoRunItems'] += $ArrTempData
-                }
-                ElseIf
-                (
-                    $UseCache
-                )
-                {
-                    $HashReturn['GetAutoRuns']['AutoRunItems'] += Get-Content -Path $CachePath | ConvertFrom-Yaml -AllDocuments
-                }
-                $HashReturn['GetAutoRuns'].Count = $($HashReturn['GetAutoRuns']['AutoRunItems'] | Measure-Object | Select-Object -ExpandProperty Count)
-            #endregion Service Count
+		    If
+		    (
+			    $ArrTempData
+            )
+	        {
+	            $HashReturn['GetAutoRuns']['AutoRunItems'] += $ArrTempData
+	        }
+		    ElseIf
+		    (
+			    $UseCache
+		    )
+		    {
+			    $HashReturn['GetAutoRuns']['AutoRunItems'] += Get-Content -Path $CachePath | ConvertFrom-Yaml -AllDocuments
+		    }
+            $HashReturn['GetAutoRuns'].Count = $($HashReturn['GetAutoRuns']['AutoRunItems'] | Measure-Object | Select-Object -ExpandProperty Count)
+           #endregion Service Count
 
-            #region Cleanup
-                $AutoRunObj = $null
-                $ArrTempData = $null
-                If
-                (
-                    $ClearGarbageCollecting
-                )
-                {
-                    $null = Clear-BlugenieMemory
-                }
-            #endregion Cleanup
-        }
+           #region Cleanup
+	           $AutoRunObj = $null
+               $ArrTempData = $null
+               If
+		       (
+		           $ClearGarbageCollecting
+		       )
+		       {
+			       $null = Clear-BlugenieMemory
+		       }
+		    #endregion Cleanup
+		#endregion Process Signature Information
+		  }
+          
     #endregion Main
 
-    #region Output
+     #region Output
         $EndTime = $(Get-Date -ErrorAction SilentlyContinue)
         $HashReturn['GetAutoRuns'].EndTime = $($EndTime).DateTime
         $HashReturn['GetAutoRuns'].ElapsedTime = $(New-TimeSpan -Start $StartTime -End $EndTime -ErrorAction SilentlyContinue)`
@@ -722,8 +724,6 @@ Function Get-BluGenieAutoRuns
             $null = $HashReturn['GetAutoRuns'].Remove('CachePath')
             $null = $HashReturn['GetAutoRuns'].Remove('EndTime')
             $null = $HashReturn['GetAutoRuns'].Remove('ElapsedTime')
-            $null = $HashReturn['GetAutoRuns'].Remove('ToolCheck')
-            $null = $HashReturn['GetAutoRuns'].Remove('ToolPath')
         }
 
         #region Clean Up

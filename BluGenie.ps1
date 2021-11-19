@@ -11,7 +11,7 @@
         * Original Build Version    : 1903.2005
         * Build Date Posted			:
         * Latest Author             : Michael Arroyo
-        * Latest Build Version      : 21.04.1901
+        * Latest Build Version      : 21.11.0801
         * Comments                  :
         * Dependencies              :
             ~
@@ -592,6 +592,84 @@
                         • [Michael Arroyo] Updated the CLI Help screen to show a cleaner overview of how to run BluGenie.exe
                         • [Michael Arroyo] Updated all the CLI commands to run as abbreviations as well as the full command names
             ~ 21.04.1901• [Michael Arroyo] Updated the JSON Job call to the new function Publish-BlugenieArtifact
+            ~ 21.11.0801 [BluGenie]
+                            o [Michael Arroyo] Updated HelpMnu.dat to include the new Help Module information
+                            o [Michael Arroyo] Added Walk as an Alias for Invoke-WalkThrough
+                        [BluGenie.psm1]
+                            o [Michael Arroyo] Consolidated Code (Removed 800 plus lines of code with this update)
+                            o [Michael Arroyo] Updated all ForEach-Object references to ForEach to determine speed updates (only gained 3 seconds
+                                in load time)
+                        [Set-BluGenieJobId]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+                        [Set-BluGenieCommands]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+                        [Set-BluGenieParallelCommands]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+                        [Set-BluGeniePostCommands]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+                        [Set-BluGenieSystems]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+                        [Set-BluGenieThreadCount]
+                            o [Michael Arroyo] Consolidated Code
+                            o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+                            o [Michael Arroyo] Updated the Description Information for Help content
+                            o [Michael Arroyo] Updated the Walk Through
+                        [Get-BluGenieAutoRuns]
+                            o [Ravi Vinod Dubey] Moved Build Notes out of General Posh Help section
+                            o [Ravi Vinod Dubey] Added support for Caching
+                            o [Ravi Vinod Dubey] Added support for Clearing Garbage collecting
+                            o [Ravi Vinod Dubey] Added support for SQLite DB
+                            o [Ravi Vinod Dubey] Updated Process Query and Filtering
+                            o [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended
+                                debugging info unless you manually set the -Verbose parameter.
+                            o [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+                            o [Ravi Vinod Dubey] Change the script to check the AutoRuns tools in ..\Tools\SysinternalsSuite\
+                        [Get-BluGenieFirewallRules]
+                            o [Michael Arroyo] Updated script based on the ( PSScriptAnalyzerSettings.psd1 )
+                            o [Michael Arroyo] Moved Build Notes out of General Posh Help section
+                            o [Ravi Vinod Dubey] Added support for Caching
+                            o [Ravi Vinod Dubey] Added support for Clearing Garbage collecting
+                            o [Ravi Vinod Dubey] Added support for SQLite DB
+                            o [Ravi Vinod Dubey] Added support for OutYaml
+                            o [Ravi Vinod Dubey] Updated Process Query and Filtering
+                            o [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended
+                                debugging info unless you manually set the -Verbose parameter.
+                            o [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+                        [Invoke-BluGenieYara]
+                            o [Michael Arroyo] Updated the function to the new function template
+                            o [Michael Arroyo] Added more detailed information to the Return data
+                            o [Michael Arroyo] Updated script based on the ( PSScriptAnalyzerSettings.psd1 )
+                            o [Michael Arroyo] Moved Build Notes out of General Posh Help section
+                            o [Michael Arroyo] Added support for Caching
+                            o [Michael Arroyo] Added support for Clearing Garbage collecting
+                            o [Michael Arroyo] Added support for SQLite DB
+                            o [Michael Arroyo] Updated Service Query and Filtering (10x faster when processing)
+                            o [Michael Arroyo] Added support for the -Verbose parameter.  The query return will no longer shows extended
+                                debugging info unless you manually set the -Verbose parameter.
+                            o [Michael Arroyo] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+                            o [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -ForceDBUpdate is used
+                            o [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -NewDBTable is used
+                            o [Michael Arroyo] Updated the Dynamic parameter update region to disable -UpdateDB if running under PowerShell 2
+                            o [Michael Arroyo] Tools path updated with $('{0}\Tools\Yara\{1}' -f $(Get-Location | Select-Object -ExpandProperty
+                                Path), $Yara)
+                            o [Michael Arroyo] Updated the CommandlineOptions switch process to pull from the parameters directly instead of the
+                                PSBoundParameters. This is cleaner and also allows you to test in real time.  The old way using PSBoundParameters
+                                is only valid at runtime or debug mode.
 #>
 #endregion Build Notes
 

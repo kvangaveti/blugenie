@@ -6,16 +6,8 @@
     #region Script File and Path Values
         $BluGenieInfo['PSScriptRoot'] = $PSScriptRoot
 
-        If
-        (
-            $BluGenieInfo['PSScriptRoot'] -eq ''
-        )
-        {
-            If
-            (
-                $Host.Name -match 'ISE'
-            )
-            {
+        If ($BluGenieInfo['PSScriptRoot'] -eq '') {
+            If ($Host.Name -match 'ISE') {
                 $BluGenieInfo['PSScriptRoot'] = Split-Path -Path $psISE.CurrentFile.FullPath -Parent
             }
         }
@@ -36,11 +28,7 @@
 
     #region Set  Global Module Variables and Project Information
         #region Pull the Scripts Parent directory information
-            If
-            (
-                -Not $env:BluGenieRoot
-            )
-            {
+            If (-Not $env:BluGenieRoot) {
                 $ScriptDirectory = $BluGenieInfo.PSScriptRoot
                 $TranscriptsDir = $('{0}\Windows\Temp\BluGenie\Transcripts' -f $env:SystemDrive)
                 $TranscriptsFile = $('{0}\BluGenie_Transcript_{1}.log' -f $TranscriptsDir, $CurDate)
@@ -51,28 +39,20 @@
                 $BluGenieInfo['ScriptSettings']['LoadedVariables'] += 'ScriptDirectory'
                 $BluGenieInfo['ScriptSettings']['LoadedVariables'] += 'TranscriptsDir'
                 $BluGenieInfo['ScriptSettings']['LoadedVariables'] += 'TranscriptsFile'
-            }
-            Else
-            {
+            } Else {
                 $ScriptDirectory = $($env:BluGenieRoot)
 
                 #region Detect Config File
-                    Switch
-                    (
-                        $null
-                    )
-                    {
+                    Switch ($null) {
                         #region Check if Config.JSON exists
-                            {$(Test-Path -Path $('{0}\Blubin\Modules\Tools\Config.JSON' -f $ScriptDirectory))}
-                            {
+                            {$(Test-Path -Path $('{0}\Blubin\Modules\Tools\Config.JSON' -f $ScriptDirectory))} {
                                 $ToolsConfigFile = $('{0}\Blubin\Modules\Tools\Config.JSON' -f $ScriptDirectory)
                                 break
                             }
                         #endregion Check if Config.JSON exists
 
                         #region Check if Config.YAML exists
-                            {$(Test-Path -Path $('{0}\Blubin\Modules\Tools\Config.YAML' -f $ScriptDirectory))}
-                            {
+                            {$(Test-Path -Path $('{0}\Blubin\Modules\Tools\Config.YAML' -f $ScriptDirectory))} {
                                 $ToolsConfigFile = $('{0}\Blubin\Modules\Tools\Config.YAML' -f $ScriptDirectory)
                                 break
                             }
@@ -87,30 +67,20 @@
         #region Set Script Variables if running as a Module
             $ErrorActionPreference = "silentlycontinue"
 
-            If
-            (
-                -Not $env:BluGenieRoot
-            )
-            {
+            If (-Not $env:BluGenieRoot) {
                 $("Loading by the Module Only:`n") | Out-File -FilePath $TranscriptsFile
 
                 #region Detect Config File
-                    Switch
-                    (
-                        $null
-                    )
-                    {
+                    Switch ($null) {
                         #region Check if Config.JSON exists
-                            {$(Test-Path -Path $('{0}\..\Tools\Config.JSON' -f $ScriptDirectory))}
-                            {
+                            {$(Test-Path -Path $('{0}\..\Tools\Config.JSON' -f $ScriptDirectory))} {
                                 $ToolsConfigFile = $('{0}\..\Tools\Config.JSON' -f $ScriptDirectory)
                                 break
                             }
                         #endregion Check if Config.JSON exists
 
                         #region Check if Config.YAML exists
-                            {$(Test-Path -Path $('{0}\..\Tools\Config.YAML' -f $ScriptDirectory))}
-                            {
+                            {$(Test-Path -Path $('{0}\..\Tools\Config.YAML' -f $ScriptDirectory))} {
                                 $ToolsConfigFile = $('{0}\..\Tools\Config.YAML' -f $ScriptDirectory)
                                 break
                             }
@@ -172,11 +142,7 @@
         #endregion Set Script Variable if running as a Module
 
         #region Update Module Path
-            If
-            (
-                -Not $env:BluGenieRoot
-            )
-            {
+            If (-Not $env:BluGenieRoot) {
                 $BluGenieModulePath = Split-Path -Path $ScriptDirectory -Parent
                 $env:PSModulePath = $BluGenieModulePath + $([System.IO.Path]::PathSeparator) + $env:PSModulePath
                 $BluGenieInfo['ScriptSettings']['LoadedVariables'] += 'BluGenieModulePath'
@@ -204,15 +170,9 @@
             #endregion Script block variables
 
             #region Update Module Path
-                If
-                (
-                    $env:BluGenieRoot
-                )
-                {
+                If ($env:BluGenieRoot) {
                     $BluGenieModulePath = $('{0}\Blubin\Modules\' -f $ScriptDirectory)
-                }
-                Else
-                {
+                } Else {
                     $BluGenieModulePath = Split-Path -Path $ScriptDirectory -Parent
                 }
                 #$BluGenieModulePath = $('{0}\Blubin\Modules\' -f $ScriptDirectory)
@@ -224,24 +184,15 @@
             #endregion Load BluGenie Helper Modules
 
             #region IP Check
-                If
-                (
-                    $CurSystem -match '\d+?\.\d+?\.\d+?\.\d*' #IP was used.  Convert back to hostname
-                )
-                {
+                If ($CurSystem -match '\d+?\.\d+?\.\d+?\.\d*') { #IP was used.  Convert back to hostname
                     $LogFileName = $CurSystem
-                    Try
-                    {
+                    Try {
                         $DNSCurSystem = [net.dns]::GetHostByAddress($CurSystem) | Select-Object -ExpandProperty Hostname
                         $CurSystem = Get-WmiObject -ComputerName $DNSCurSystem -Class Win32_OperatingSystem -ErrorAction SilentlyContinue | Select-Object -ExpandProperty CSName
-                    }
-                    Catch
-                    {
+                    } Catch {
                         $DNSCurSystem = 'No_Valid_Hostname'
                     }
-                }
-                Else
-                {
+                } Else {
                     $LogFileName = $CurSystem
                     $DNSCurSystem = $CurSystem
                 }
@@ -260,11 +211,7 @@
                         Where-Object {$_.ipaddress -ne $null -and $_.defaultipgateway -ne $null} | `
                         Select-Object -First 1 -ExpandProperty IPAddress | Select-String -Pattern '\.')
 
-                    If
-                    (
-                        $IPString
-                    )
-                    {
+                    If ($IPString) {
                         $LocalIP = $IPString.ToString().Trim()
                     }
 
@@ -296,15 +243,9 @@
                 #endregion Script Variables
 
                 #region Update Module Path
-                    If
-                    (
-                        $env:PSModulePath -match 'BluGenie\\Modules;'
-                    )
-                    {
+                    If ($env:PSModulePath -match 'BluGenie\\Modules;') {
                         $BluGenieModulePath = $($($env:PSModulePath -split ';' | Select-String -Pattern 'BluGenie') -replace '\n')
-                    }
-                    Else
-                    {
+                    } Else {
                         $BluGenieModulePath = $('{0}\BluGenie\Modules' -f $Env:ProgramFiles)
                         $env:PSModulePath = $BluGenieModulePath + $([System.IO.Path]::PathSeparator) + $env:PSModulePath
                     }
@@ -316,52 +257,31 @@
                 #endregion Update Execution Policy
 
                 #region Load BluGenie Helper Modules
-                    If
-                    (
-                        -Not $(Get-Module | Where-Object -FilterScript { $_.Name -eq 'BluGenie'})
-                    )
-                    {
+                    If (-Not $(Get-Module | Where-Object -FilterScript { $_.Name -eq 'BluGenie'})) {
                         #$QueryModules = Get-ChildItem -Path $BluGenieModulePath -Directory | Select-Object -Property FullName,BaseName
-                        $QueryModules = Get-ChildItem -Path $BluGenieModulePath | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
+                        $QueryModules = Get-ChildItem -Path $BluGenieModulePath | Where-Object -FilterScript { $_.Mode -match 'd....'} | `
+                            Select-Object -Property FullName,BaseName
                         $ModulesLoaded = @()
-                        $QueryModules | ForEach-Object `
-                        -Process `
-                        {
-                            $CurQueryModule = $_
-                            Try
-                            {
-                                If
-                                (
-                                    $BGVerbose
-                                )
-                                {
+                        ForEach ($CurQueryModule in $QueryModules) {
+                            Try {
+                                If ($BGVerbose) {
                                     Import-Module -Name $CurQueryModule.FullName -ErrorAction Stop -Verbose -Force
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
+                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{ Name        = 'Module'
                                                                                                     Expression = {$CurQueryModule.BaseName}
                                                                                                 },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
+                                                                                                @{ Name        = 'Path'
                                                                                                     Expression = {$CurQueryModule.FullName}
                                                                                                 }
-                                }
-                                Else
-                                {
+                                } Else {
                                     Import-Module -Name $_.FullName -ErrorAction Stop
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
+                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{ Name        = 'Module'
                                                                                                     Expression = {$CurQueryModule.BaseName}
                                                                                                 },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
+                                                                                                @{ Name        = 'Path'
                                                                                                     Expression = {$CurQueryModule.FullName}
                                                                                                 }
                                 }
-                            }
-                            Catch
-                            {
-                                #Don't Process
-                            }
+                            } Catch {} #Do Nothing
                         }
                     }
                 #endregion Load BluGenie Helper Modules
@@ -371,11 +291,7 @@
                 #endregion Update Execution Policy back to the default
 
                 #region *** Debug Argument on Remote System ***
-                    If
-                    (
-                        $BGDebug
-                    )
-                    {
+                    If ($BGDebug) {
                         "[BluGenie Arguments]" | Out-File -FilePath `
                             $('{0}\Windows\Temp\BluGenieDebug.txt' -f $env:SystemDrive) -Force
 
@@ -401,16 +317,8 @@
 
                 #region Main
                     $LoadedAsServiceJob = $false
-                    If
-                    (
-                        $BGServiceJob -and $($PSVersionTable.PSVersion.Major -ge 3)
-                    )
-                    {
-                        If
-                        (
-                            $(Get-Service | Where-Object -Property Name -eq 'BluGenie' | Select-Object -ExpandProperty Status) -eq 'Running'
-                        )
-                        {
+                    If ($BGServiceJob -and $($PSVersionTable.PSVersion.Major -ge 3)) {
+                        If ($(Get-Service | Where-Object -Property Name -eq 'BluGenie' | Select-Object -ExpandProperty Status) -eq 'Running') {
                             $LoadedAsServiceJob = $true
                             $BGServicePath = $('{0}\BluGenie\Modules\BGService\Jobs' -f $Env:ProgramFiles)
 
@@ -418,30 +326,14 @@
                         }
                     }
 
-                    If
-                    (
-                        -Not $LoadedAsServiceJob
-                    )
-                    {
+                    If (-Not $LoadedAsServiceJob) {
                         #region Process job type
                             #region command section
-                                If
-                                (
-                                    $Commands
-                                )
-                                {
-                                    $Commands | ForEach-Object `
-                                    -Process `
-                                    {
-                                        $GlbCurJobCommand = $_
-
+                                If ($Commands) {
+                                    ForEach ($GlbCurJobCommand in $Commands) {
                                         $JobReturn = Invoke-Command -ScriptBlock $([ScriptBlock]::Create($GlbCurJobCommand))
 
-                                        If
-                                        (
-                                            $GlbCurJobCommand -match 'Get-BluGenieTrapData.*-OverWrite'
-                                        )
-                                        {
+                                        If ($GlbCurJobCommand -match 'Get-BluGenieTrapData.*-OverWrite') {
                                             $ReturnTrapData = $true
                                             $TrapReturn = $JobReturn
                                         }
@@ -460,16 +352,8 @@
                             #endregion command section
 
                             #region parallelcommands section
-                                If
-                                (
-                                    $AgentParallelCommands
-                                )
-                                {
-                                    If
-                                    (
-                                        $PSVersionTable.psversion.major -eq '2'
-                                    )
-                                    {
+                                If ($AgentParallelCommands) {
+                                    If ($PSVersionTable.psversion.major -eq '2') {
                                         $AgentParallelCommands | ForEach-Object `
                                         -Process `
                                         {
@@ -487,39 +371,29 @@
 
                                             $null = Remove-Variable $GlbCurJobCommand -ErrorAction SilentlyContinue -Force
                                         }
-                                    }
-                                    Else
-                                    {
+                                    } Else {
                                         $JobReturn = Start-RunSpace -commands $AgentParallelCommands -StatusMessage Quiet
 
-                                        If
-                                        (
-                                            $JobReturn
-                                        )
-                                        {
-                                            $JobReturn.AllJobResults.Keys | Where-Object -FilterScript { $_ -match '^Job\d+'} | ForEach-Object `
-                                            -Process `
-                                            {
-                                                $CurJobKey = $_
-                                                $CurJobObject = $($JobReturn).AllJobResults.Item("$CurJobKey")
-                                                $CurJobData = $CurJobObject.Results
-                                                $CurJobCommand = $CurJobObject.Command
+                                        If ($JobReturn) {
+                                            ForEach ($CurJobKey in $($JobReturn.AllJobResults.Keys | `
+                                                Where-Object -FilterScript { $_ -match '^Job\d+'})) {
+                                                    $CurJobObject = $($JobReturn).AllJobResults.Item("$CurJobKey")
+                                                    $CurJobData = $CurJobObject.Results
+                                                    $CurJobCommand = $CurJobObject.Command
 
-                                                $CurObjtoHash = @{
-                                                    return = @{}
-                                                }
+                                                    $CurObjtoHash = @{
+                                                        return = @{}
+                                                    }
 
-                                                $CurJobData.keys | ForEach-Object `
-                                                -Process `
-                                                {
-                                                    $CurJobDataKey = $_
-                                                    $CurJobDataValue = $CurJobData.("$CurJobDataKey")
-                                                    $CurObjtoHash.return["$CurJobDataKey"] = $CurJobDataValue
-                                                }
+                                                    ForEach ($CurJobDataKey in $CurJobData.keys) {
+                                                        $CurJobDataKey = $_
+                                                        $CurJobDataValue = $CurJobData.("$CurJobDataKey")
+                                                        $CurObjtoHash.return["$CurJobDataKey"] = $CurJobDataValue
+                                                    }
 
-                                                $JsonReturn.$($jobid).$($localip).$($env:COMPUTERNAME) += @{
-                                                    $CurJobCommand = $CurObjtoHash
-                                                }
+                                                    $JsonReturn.$($jobid).$($localip).$($env:COMPUTERNAME) += @{
+                                                        $CurJobCommand = $CurObjtoHash
+                                                    }
                                             }
                                         }
 
@@ -536,15 +410,8 @@
                             #endregion parallelcommands section
 
                             #region postcommands section
-                                If
-                                (
-                                    $AgentPostCommands
-                                )
-                                {
-                                    $AgentPostCommands | ForEach-Object `
-                                    -Process `
-                                    {
-                                        $GlbCurJobCommand = $_
+                                If ($AgentPostCommands) {
+                                    ForEach ($GlbCurJobCommand in $AgentPostCommands) {
                                         $JobReturn = Invoke-Command -ScriptBlock $([ScriptBlock]::Create($GlbCurJobCommand))
 
                                         $JsonReturn.$($jobid).$($localip).$($env:COMPUTERNAME) += @{
@@ -564,11 +431,7 @@
                 #endregion Main
 
                 #region Trap Return to local machine
-                    If
-                    (
-                        $BGTrap
-                    )
-                    {
+                    If ($BGTrap) {
                         $FullDumpPath = $('{0}\Windows\Temp\BG{1}-{2}-{3}.log' -f $($env:SystemDrive), $JobID, $PID, $(New-BluGenieUID -Delimiter '' -NumOfSets 2 -ErrorAction SilentlyContinue))
 
                         $TrapEventMsg = New-Object -TypeName PSObject -Property @{
@@ -604,37 +467,23 @@
                         $TrapEntryType = 'Information'
                         $TrapEventID = 7114
 
-                        If
-                        (
-                            -not [System.Diagnostics.EventLog]::SourceExists($TrapSource)
-                        )
-                        {
+                        If (-not [System.Diagnostics.EventLog]::SourceExists($TrapSource)) {
                             $null = New-EventLog -LogName $TrapEventLogName -Source $TrapSource -ErrorAction SilentlyContinue
                         }
 
                         #$null = Write-EventLog -LogName $TrapEventLogName -Source $TrapSource -EntryType $TrapEntryType -EventID $TrapEventID -Message $( ConvertTo-Yaml -Data $TrapEventMsg )
                         $null = Write-EventLog -LogName $TrapEventLogName -Source $TrapSource -EntryType $TrapEntryType -EventID $TrapEventID -Message $( $TrapEventMsg )
 
-                        If
-                        (
-                            $PSVersionTable.PSVersion.Major -gt 2
-                        )
-                        {
+                        If ($PSVersionTable.PSVersion.Major -gt 2) {
                             $JsonReturn | ConvertTo-Json -Depth 10 -Compress | Out-File -FilePath $FullDumpPath -ErrorAction SilentlyContinue
-                        }
-                        Else
-                        {
+                        } Else {
                             $JsonReturn | Export-Clixml -Path $FullDumpPath -ErrorAction SilentlyContinue
                         }
                     }
                 #endregion Trap Return to local machine
 
                 #region ReturnTrapData
-                    If
-                    (
-                        $ReturnTrapData
-                    )
-                    {
+                    If ($ReturnTrapData) {
                         $TrapJobID = $TrapReturn.jobid
                         $TrapIP = $TrapReturn."$TrapJobID".ip
                         $TrapHostname = $TrapReturn."$TrapJobID"."$TrapIP".hostname
@@ -648,42 +497,18 @@
             #endregion This is the script block being sent to the remote host
 
             #region Copy Modules
-                If
-                (
-                    -Not $($DNSCurSystem -eq 'localhost')
-                )
-                {
-                    If
-                    (
-                        $BGUpdateMods
-                    )
-                    {
+                If (-Not $($DNSCurSystem -eq 'localhost')) {
+                    If ($BGUpdateMods) {
                         $ModuleSource = @()
 
-                        Get-Childitem -Path $BluGenieModulePath -File -Recurse | Select-Object -Property FullName | ForEach-Object `
-                            -Process `
-                            {
-                                If
-                                (
-                                    $ToolsConfig.ExcludedCopyFiles.Name.Count -eq 1
-                                )
-                                {
-                                    If
-                                    (
-                                        $_  -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name).Replace('\','\\')
-                                    )
-                                    {
-                                        $ModuleSource += $_.FullName
+                        ForEach ($BMModuleItem in $(Get-Childitem -Path $BluGenieModulePath -File -Recurse | Select-Object -Property FullName)) {
+                                If ($ToolsConfig.ExcludedCopyFiles.Name.Count -eq 1) {
+                                    If ($BMModuleItem -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name).Replace('\','\\')) {
+                                        $ModuleSource += $BMModuleItem.FullName
                                     }
-                                }
-                                Else
-                                {
-                                    If
-                                    (
-                                        $_  -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name -Join '|').Replace('\','\\')
-                                    )
-                                    {
-                                        $ModuleSource += $_.FullName
+                                } Else {
+                                    If ($BMModuleItem -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name -Join '|').Replace('\','\\')) {
+                                        $ModuleSource += $BMModuleItem.FullName
                                     }
                                 }
                             }
@@ -692,35 +517,17 @@
                                         -Destination $('{0}\BluGenie\Modules\' -f $Env:ProgramFiles) `
                                         -RelativePath $($BluGenieModulePath) -ToSession -ComputerName $DNSCurSystem `
                                         -Force -ErrorAction SilentlyContinue
-                    }
-                    Else
-                    {
+                    } Else {
                         $ModuleSource = @()
 
-                        Get-Childitem -Path $BluGenieModulePath -File -Recurse | Select-Object -Property FullName | ForEach-Object `
-                            -Process `
-                            {
-                                If
-                                (
-                                    $ToolsConfig.ExcludedCopyFiles.Name.Count -eq 1
-                                )
-                                {
-                                    If
-                                    (
-                                        $_  -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name).Replace('\','\\')
-                                    )
-                                    {
-                                        $ModuleSource += $_.FullName
+                        ForEach ($BMModuleItem  in $(Get-Childitem -Path $BluGenieModulePath -File -Recurse | Select-Object -Property FullName)) {
+                                If ($ToolsConfig.ExcludedCopyFiles.Name.Count -eq 1) {
+                                    If ($BMModuleItem -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name).Replace('\','\\')) {
+                                        $ModuleSource += $BMModuleItem.FullName
                                     }
-                                }
-                                Else
-                                {
-                                    If
-                                    (
-                                        $_  -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name -Join '|').Replace('\','\\')
-                                    )
-                                    {
-                                        $ModuleSource += $_.FullName
+                                } Else {
+                                    If ($BMModuleItem -Notmatch $($ToolsConfig.ExcludedCopyFiles.Name -Join '|').Replace('\','\\')) {
+                                        $ModuleSource += $BMModuleItem.FullName
                                     }
                                 }
                             }
@@ -739,11 +546,7 @@
 
             #region Argument Hash (To be sent as arguments to the remote machine)
                 #region Testing - Run in the ISE to track output (Parameter Tracking)
-                    If
-                    (
-                        $host.name -match 'ISE'
-                    )
-                    {
+                    If ($host.name -match 'ISE') {
                         $parameter | ConvertTo-Json | Out-File -FilePath $('{0}\Parameter_{1}.txt' -f $TranscriptsDir, $DNSCurSystem) -Force -ErrorAction SilentlyContinue
                     }
                 #endregion Testing - Run in the ISE to track output (Parameter Tracking)
@@ -761,22 +564,12 @@
                 $ArgHash.BGServiceJob = $BGServiceJob
                 $ArgHash.BGServiceJobFile = $BGServiceJobFile
 
-                If
-                (
-                    $parameter.Command
-                )
+                If ($parameter.Command)
                 {
-                    $parameter.Command | ForEach-Object `
-                    -Process `
-                    {
+                    ForEach($ParamCmd in $($parameter.Command)) {
                         #Run commands prior to processing the remote node job
-                        Switch
-                        (
-                            $_
-                        )
-                        {
-                            {$_ -match 'Get-ADMachineInfo'}
-                            {
+                        Switch ($ParamCmd) {
+                            {$ParamCmd -match 'Get-ADMachineInfo'} {
                                 $DistinguishedName = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\State\Machine' -Name 'Distinguished-Name' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty 'Distinguished-Name'
                                 $SystemBaseName = $('DC={0}' -f $($DistinguishedName -split ('\,DC\=',2) | Select-Object -Skip 1 -First 1))
 
@@ -809,81 +602,72 @@
                                 $AppendData = $true
                                 $ArgHash.Commands += $_
                             }
-                            {$_ -match 'Send-Item'}
-                            {
+
+                            {$ParamCmd -match 'Send-Item'} {
                                 $SendItemCommand = $('{0} -ComputerName {1}' -f $_, $DNSCurSystem)
                                 $ArrRunSpaceCommands += $SendItemCommand
 
                                 #Invoke on Agent or comment out to Run for RunSpace Only
                                 #$ArgHash.Commands += $_
                             }
-                            {$_ -match 'Install-Harvester'}
-                            {
+
+                            {$ParamCmd -match 'Install-Harvester'} {
                                 #Invoke on Agent or comment out to Run for RunSpace Only
                                 $InstallHarvesterCommand = $('{0} -ComputerName {1}' -f $_, $DNSCurSystem)
 
-                                Switch -Regex (
-                                    $_.ToLower()
-                                )
-                                {
-                                    '\-uninstall'
-                                    {
+                                Switch -Regex ($_.ToLower()) {
+                                    '\-uninstall' {
                                         $ArgHash.Commands += $InstallHarvesterCommand
                                         break
                                     }
-                                    '\-install'
-                                    {
+
+                                    '\-install' {
                                         $ArgHash.Commands += $InstallHarvesterCommand -replace ('\-install','')
                                         $ArrRunSpaceCommands += $InstallHarvesterCommand -replace ('\-install','-copyonly')
                                         break
                                     }
-                                    '\-copyonly'
-                                    {
+
+                                    '\-copyonly'{
                                         $ArrRunSpaceCommands += $InstallHarvesterCommand
                                         break
                                     }
-                                    default
-                                    {
+
+                                    default {
                                         $ArgHash.Commands += $('{0} -install' -f $InstallHarvesterCommand)
                                         $ArrRunSpaceCommands += $('{0} -copyonly' -f $InstallHarvesterCommand)
                                     }
                                 }
                             }
-                            {$_ -match 'Install-SysMon'}
-                            {
+                            {$ParamCmd -match 'Install-SysMon'} {
                                 #Invoke on Agent or comment out to Run for RunSpace Only
-                                $InstallSysMonCommand = $('{0} -ComputerName {1}' -f $_, $DNSCurSystem)
+                                $InstallSysMonCommand = $('{0} -ComputerName {1}' -f $ParamCmd, $DNSCurSystem)
 
-                                Switch -Regex (
-                                    $_.ToLower()
-                                )
-                                {
-                                    '\-uninstall'
-                                    {
+                                Switch -Regex ($_.ToLower()) {
+                                    '\-uninstall' {
                                         $ArgHash.Commands += $InstallSysMonCommand
                                         break
                                     }
-                                    '\-install'
-                                    {
+
+                                    '\-install' {
                                         $ArgHash.Commands += $InstallSysMonCommand -replace ('\-install','')
                                         $ArrRunSpaceCommands += $InstallSysMonCommand -replace ('\-install','-copyonly')
                                         break
                                     }
-                                    '\-copyonly'
-                                    {
+
+                                    '\-copyonly' {
                                         $ArgHash.Commands += $InstallSysMonCommand
                                         break
                                     }
-                                    default
-                                    {
+
+                                    default {
                                         $ArgHash.Commands += $('{0} -install' -f $InstallSysMonCommand)
                                         $ArrRunSpaceCommands += $('{0} -copyonly' -f $InstallSysMonCommand)
                                     }
                                 }
                             }
-                            Default
-                            {
-                                $ArgHash.Commands += $_
+
+                            Default {
+                                $ArgHash.Commands += $ParamCmd
                             }
                         }
                     }
@@ -891,15 +675,9 @@
 
                 #region JSON Job ID
                     $ArgHash.JSONJob = $parameter.JSONJob
-                    If
-                    (
-                        $ArgHash.JSONJOb
-                    )
-                    {
+                    If ($ArgHash.JSONJOb) {
                         $ArgHash.JSON = $true
-                    }
-                    else
-                    {
+                    } else {
                         $ArgHash.JSON = $false
                     }
 
@@ -909,56 +687,39 @@
             #endregion Argument Hash (To be sent as arguments to the remote machine)
 
             #region WinRM Check and Execute remote command(s)
-                If
-                (
-                    -Not $($DNSCurSystem -eq 'localhost')
-                )
-                {
+                If (-Not $($DNSCurSystem -eq 'localhost')) {
                     $ReturnWinRMInfo = $(Enable-BluGenieWinRMoverWMI -ComputerName $DNSCurSystem -ReturnDetails)
 
-                    If
-                    (
-                        $ReturnWinRMInfo.EnableWinRM.Enabled
-                    )
-                    {
-                        If
-                        (
-                            $ReturnWinRMInfo.EnableWinRM.PSVersion -eq 2
-                        )
-                        {
+                    If ($ReturnWinRMInfo.EnableWinRM.Enabled) {
+                        If ($ReturnWinRMInfo.EnableWinRM.PSVersion -eq 2) {
                             $ReturnWinRMInfo = $null
                             $ReturnWinRMInfo = $(Enable-BluGenieWinRMoverWMI -ComputerName $DNSCurSystem -ReturnDetails `
-                            -SetValues `
-                            -MaxConcurrentUsers $WinRMSettings.PS2.MaxConcurrentUsers`
-                            -MaxProcessesPerShell $WinRMSettings.PS2.MaxProcessesPerShell`
-                            -MaxMemoryPerShellMB $WinRMSettings.PS2.MaxMemoryPerShellMB`
-                            -MaxShellsPerUser $WinRMSettings.PS2.MaxShellsPerUser`
-                            -MaxShellRunTime $WinRMSettings.PS2.MaxShellRunTime
+                                -SetValues `
+                                -MaxConcurrentUsers $WinRMSettings.PS2.MaxConcurrentUsers`
+                                -MaxProcessesPerShell $WinRMSettings.PS2.MaxProcessesPerShell`
+                                -MaxMemoryPerShellMB $WinRMSettings.PS2.MaxMemoryPerShellMB`
+                                -MaxShellsPerUser $WinRMSettings.PS2.MaxShellsPerUser`
+                                -MaxShellRunTime $WinRMSettings.PS2.MaxShellRunTime
                             )
-                        }
-                        Else
-                        {
+                        } Else {
                             $ReturnWinRMInfo = $null
                             $ReturnWinRMInfo = $(Enable-BluGenieWinRMoverWMI -ComputerName $DNSCurSystem -ReturnDetails `
-                            -SetValues `
-                            -MaxConcurrentUsers $WinRMSettings.PS3.MaxConcurrentUsers`
-                            -MaxProcessesPerShell $WinRMSettings.PS3.MaxProcessesPerShell`
-                            -MaxMemoryPerShellMB $WinRMSettings.PS3.MaxMemoryPerShellMB`
-                            -MaxShellsPerUser $WinRMSettings.PS3.MaxShellsPerUser`
-                            -MaxShellRunTime $WinRMSettings.PS3.MaxShellRunTime
+                                -SetValues `
+                                -MaxConcurrentUsers $WinRMSettings.PS3.MaxConcurrentUsers`
+                                -MaxProcessesPerShell $WinRMSettings.PS3.MaxProcessesPerShell`
+                                -MaxMemoryPerShellMB $WinRMSettings.PS3.MaxMemoryPerShellMB`
+                                -MaxShellsPerUser $WinRMSettings.PS3.MaxShellsPerUser`
+                                -MaxShellRunTime $WinRMSettings.PS3.MaxShellRunTime
                             )
                         }
                     }
                 }
 
-                Try
-                {
+                Try {
                     $CurSysIP = [Net.Dns]::GetHostAddresses("$DNSCurSystem") |
                                 Where-Object { $_.AddressFamily -eq 'InterNetwork' } |
                                 Select-Object -ExpandProperty IPAddressToString -First 1
-                }
-                Catch
-                {
+                } Catch {
                     $CurSysIP = 'No_Valid_IP'
                 }
 
@@ -975,21 +736,10 @@
                     $MyReturn.RunspaceId = $(New-BluGenieUID -ErrorAction SilentlyContinue)
                 #endregion Create Hash Table Return
 
-                If
-                (
-                    $ReturnWinRMInfo.EnableWinRM.Enabled -or $DNSCurSystem -eq 'localhost'
-                )
-                {
+                If ($ReturnWinRMInfo.EnableWinRM.Enabled -or $DNSCurSystem -eq 'localhost') {
                     #region Process RunSpace Commands
-                        If
-                        (
-                            $ArrRunSpaceCommands
-                        )
-                        {
-                            $ArrRunSpaceCommands | ForEach-Object `
-                            -Process `
-                            {
-                                $CurScriptString = $_
+                        If ($ArrRunSpaceCommands) {
+                            ForEach ($CurScriptString in $ArrRunSpaceCommands) {
                                 $CurScriptBlock = [Scriptblock]::Create($CurScriptString)
                                 $CurScriptBlockReturn = Invoke-Command -ScriptBlock $CurScriptBlock
                                 $CurCommandName = $($CurScriptString |  Select-String -Pattern '(^\w*\-\w*)').Matches[0].Value
@@ -1004,28 +754,15 @@
                         }
                     #endregion Process RunSpace Commands
 
-                    If
-                    (
-                        $ArgHash.commands -or $ArgHash.AgentParallelCommands -or $ArgHash.AgentPostCommands
-                    )
-                    {
+                    If ($ArgHash.commands -or $ArgHash.AgentParallelCommands -or $ArgHash.AgentPostCommands) {
                         #region Copy Tools to Remote Host
-                            $parameter.ToolsConfig | ForEach-Object `
-                            -Process `
-                            {
-                                $CurTool = $_
+                            ForEach ($CurTool in $($parameter.ToolsConfig)) {
                                 $CurSrc = $CurTool.FullPath
                                 $CurDst = $('{0}\{1}' -f $CurTool.RemoteDestination, $CurTool.Name)
 
-                                If
-                                (
-                                    $BGUpdateMods
-                                )
-                                {
+                                If ($BGUpdateMods) {
                                     $null = Send-Item -Source $CurSrc -Destination $CurDst -Force -ToSession -ComputerName $DNSCurSystem -ErrorAction SilentlyContinue
-                                }
-                                Else
-                                {
+                                } Else {
                                     $null = Send-Item -Source $CurSrc -Destination $CurDst -ToSession -ComputerName $DNSCurSystem -ErrorAction SilentlyContinue
                                 }
                             }
@@ -1034,11 +771,7 @@
                         #endregion Copy Tools to Remote Host
 
                         #region Testing - Run in the ISE to track output (ArgHash Tracking)
-                            If
-                            (
-                                $host.name -match 'ISE'
-                            )
-                            {
+                            If ($host.name -match 'ISE') {
                                 [PSCustomObject]@{
                                     AgentPostCommands     = $ArgHash.AgentPostCommands
                                     #FireWallRuleEnum      = $($ArgHash.FireWallRuleEnum).Keys | Where-Object -FilterScript { $_ -ne 'Names' }
@@ -1054,104 +787,64 @@
                             }
                         #endregion Testing - Run in the ISE to track output (ArgHash Tracking)
 
-                        If
-                        (
-                            $DNSCurSystem -eq 'localhost'
-                        )
-                        {
+                        If ($DNSCurSystem -eq 'localhost') {
                             $RemoteReturn = $(Invoke-Command -ScriptBlock $SendScriptBlock -ArgumentList $ArgHash)
-                        }
-                        Else
-                        {
+                        } Else {
                             $RemoteReturn = $(Invoke-Command -ComputerName $DNSCurSystem -ScriptBlock $SendScriptBlock -ArgumentList $ArgHash)
                         }
 
                         #region Testing - Run in the ISE to track output (RemoteReturn Tracking)
-                            If
-                            (
-                                $host.name -match 'ISE'
-                            )
-                            {
+                            If ($host.name -match 'ISE') {
                                 $RemoteReturn | ConvertTo-Json -Depth 10 | Out-File -FilePath $('{0}\RemoteReturn_{1}.txt' -f $TranscriptsDir, $DNSCurSystem) -Force -ErrorAction SilentlyContinue
                             }
                         #endregion Testing - Run in the ISE to track output (RemoteReturn Tracking)
 
-                        If
-                        (
-                            $RemoteReturn
-                        )
-                        {
+                        If ($RemoteReturn) {
                             $CurRemoteJob = $RemoteReturn.jobid
                             $CurRemoteIP = $RemoteReturn.$($CurRemoteJob).ip
                             $CurRemoteHost = $RemoteReturn.$($CurRemoteJob).$($CurRemoteIP).hostname
 
                             $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem) = $RemoteReturn.$($CurRemoteJob).$($CurRemoteIP).$($($CurRemoteHost).Split('.')[0])
 
-                            If
-                            (
-                                -Not $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem)
-                            )
-                            {
+                            If (-Not $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem)) {
                                 $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem) = $RemoteReturn.$($CurRemoteJob).$($CurRemoteIP).$($CurRemoteHost)
                             }
                         }
                         $MyReturn.WinRMEnabled = $($ReturnWinRMInfo.EnableWinRM)
 
-                        If
-                        (
-                            $AppendData -eq $true
-                        )
-                        {
-                            $AppendOfflineDataHash | ForEach-Object `
-                            -Process `
-                            {
+                        If ($AppendData -eq $true) {
+                            ForEach ($CurOfflineDataHash in $AppendOfflineDataHash) {
                                 $CurOfflineDataHash = $_
                                 $CurOfflineDataHashKey = $($CurOfflineDataHash.Keys[0] | Out-String).Trim()
                                 $CurOfflineDataHashValue = [PSCustomObject]$CurOfflineDataHash.Values
 
-                                If
-                                (
-                                    $CurOfflineDataHashValue
-                                )
-                                {
+                                If ($CurOfflineDataHashValue) {
                                     $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem).$($CurOfflineDataHashKey) = $($CurOfflineDataHashValue)
                                 }
                             }
                             $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem).commands += $AppendOfflineDataHash.keys
                         }
-                    }
-                    Else
-                    {
+                    } Else {
                         #region 1st Level
                             $MyReturn.RunspaceId = 'No Commands'
                             $MyReturn.WinRMEnabled = $ReturnWinRMInfo.EnableWinRM
                         #endregion
 
                         #region 3rd Level
-                            If
-                            (
-                                $AppendData
-                            )
-                            {
+                            If ($AppendData) {
                                 $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem) += $AppendOfflineDataHash
                                 $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem).commands += $AppendOfflineDataHash.keys
                             }
                         #endregion
                     }
-                }
-                Else
-                {
+                } Else {
                     #region 1st Level
                         $MyReturn.RunspaceId = 'Offline'
                         $MyReturn.WinRMEnabled = $ReturnWinRMInfo.EnableWinRM
                     #endregion
 
                     #region 3rd Level
-                        If
-                        (
-                            $AppendData
-                        )
-                        {
+                        If ($AppendData) {
                             $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem) += $AppendOfflineDataHash
                             $MyReturn.$($JobID).$($CurSysIP).$($DNSCurSystem).commands += $AppendOfflineDataHash.keys
                         }
@@ -1173,491 +866,39 @@
 
         $ModulesLoaded = @()
 
-        Switch
-        (
-            $null
-        )
-        {
-            #region Activate Posh 2.0 compliant modules
-                {$PSVersionArray -contains '2.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh2.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
+        $PSContainsList = '2.0','3.0','4.0','5.0','5.1','6.0','6.1','6.2','7.0','7.1'
+        #region Activate Nested Modules
+            ForEach ($PSContionItem in $PSContainsList) {
+                If ($PSVersionArray -contains $PSContionItem) {
+                    $QueryModules = Get-ChildItem -Path $(Join-Path `
+                        -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath $('Dependencies\Posh{0}Min' -f $PSContionItem)) | `
+                        Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
 
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
+                    If ($QueryModules) {
+                        ForEach ($CurQueryModule in $QueryModules) {
+                            Try {
+                                If (Get-Module | Where-Object -FilterScript { $_.Name -eq $CurQueryModule.BaseName }) {
+                                    Remove-Module $CurQueryModule.BaseName -Force -ErrorAction SilentlyContinue
                                 }
 
-                                $CurQueryModule = $null
-                            }
+                                Import-Module -Name $CurQueryModule.FullName -Force -ErrorAction Stop
+
+                                $ModulesLoaded += $CurQueryModule | Select-Object -Property @{ Name        = 'Module'
+                                                                                                Expression = {$CurQueryModule.BaseName}
+                                                                                            },
+                                                                                            @{ Name        = 'Path'
+                                                                                                Expression = {$CurQueryModule.FullName}
+                                                                                            }
+                            } Catch {} #Don't Process
+
+                            $CurQueryModule = $null
+                        }
                     }
 
                     $QueryModules = $null
                 }
-            #endregion Activate Posh 2.0 compliant modules
-
-            #region Activate Posh 3.0 compliant modules
-                {$PSVersionArray -contains '3.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh3.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 3.0 compliant modules
-
-            #region Activate Posh 4.0 compliant modules
-                {$PSVersionArray -contains '4.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh4.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 4.0 compliant modules
-
-            #region Activate Posh 5.0 compliant modules
-                {$PSVersionArray -contains '5.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh5.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 5.0 compliant modules
-
-            #region Activate Posh 5.1 compliant modules
-                {$PSVersionArray -contains '5.1'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh5.1Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 5.1 compliant modules
-
-            #region Activate Posh 6.0 compliant modules
-                {$PSVersionArray -contains '6.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh6.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 6.0 compliant modules
-
-            #region Activate Posh 6.1 compliant modules
-                {$PSVersionArray -contains '6.1'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh6.1Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 6.1 compliant modules
-
-            #region Activate Posh 6.2 compliant modules
-                {$PSVersionArray -contains '6.2'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh6.2Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 6.2 compliant modules
-
-            #region Activate Posh 7.0 compliant modules
-                {$PSVersionArray -contains '7.0'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh7.0Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 7.0 compliant modules
-
-            #region Activate Posh 7.1 compliant modules
-                {$PSVersionArray -contains '7.1'}
-                {
-                    $QueryModules = Get-ChildItem -Path $(Join-Path -Path $($BluGenieInfo.ScriptSettings.Workingpath) -ChildPath 'Dependencies\Posh7.1Min') | Where-Object -FilterScript { $_.Mode -match 'd....'} | Select-Object -Property FullName,BaseName
-
-                    If
-                    (
-                        $QueryModules
-                    )
-                    {
-                        $QueryModules | ForEach-Object `
-                            -Process `
-                            {
-                                $CurQueryModule = $_
-                                Try
-                                {
-                                    If
-                                    (
-                                        Get-Module | Where-Object -FilterScript { $_.Name -eq $_.BaseName }
-                                    )
-                                    {
-                                        Remove-Module $_.BaseName -Force -ErrorAction SilentlyContinue
-                                    }
-
-                                    Import-Module -Name $_.FullName -Force -ErrorAction Stop
-
-                                    $ModulesLoaded += $CurQueryModule | Select-Object -Property @{
-                                                                                                    Name       = 'Module'
-                                                                                                    Expression = {$CurQueryModule.BaseName}
-                                                                                                },
-                                                                                                @{
-                                                                                                    Name       = 'Path'
-                                                                                                    Expression = {$CurQueryModule.FullName}
-                                                                                                }
-                                }
-                                Catch
-                                {
-                                    #Don't Process
-                                }
-
-                                $CurQueryModule = $null
-                            }
-                    }
-
-                    $QueryModules = $null
-                }
-            #endregion Activate Posh 7.1 compliant modules
-        }
+            }
+        #endregion Activate Nested Modules
 
         $BluGenieInfo['ScriptSettings']['LoadedModules'] += $ModulesLoaded
     #endregion Load BluGenie Helper Modules
@@ -1667,24 +908,14 @@
     #endregion Query Core Path
 
     #region Update based on Config
-        If
-        (
-            $ToolsConfigFile
-        )
-        {
+        If ($ToolsConfigFile) {
             #region Load Config
                 $BluGenieInfo['ScriptSettings']['Log'] += $('Loading $ToolsConfig from ({0})' -f $ToolsConfigFile)
 
-                If
-                (
-                    $ToolsConfigFile -match '.*\.YAML$'
-                )
-                {
+                If ($ToolsConfigFile -match '.*\.YAML$') {
                     $ToolsConfig = $(Get-Content -Path $ToolsConfigFile -ErrorAction SilentlyContinue) | ConvertFrom-Yaml `
                         -ErrorAction SilentlyContinue
-                }
-                Else
-                {
+                } Else {
                     $ToolsConfig = $(Get-Content -Path $ToolsConfigFile -ErrorAction SilentlyContinue) | Out-String | ConvertFrom-Json `
                         -ErrorAction SilentlyContinue
                 }
@@ -1697,76 +928,63 @@
                 $BluGenieInfo['ScriptSettings']['Log'] += 'Loading WSMan Configuration'
 
                 $RestartWSMan = $false
-                If
-                (
-                    $(Get-Service -Name Winrm).Status -eq 'Running'
-                )
-                {
-                    Switch
-                    (
-                        $null
-                    )
-                    {
+                If ($(Get-Service -Name Winrm).Status -eq 'Running') {
+                    Switch ($null) {
                         #Shell Settings
-                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxConcurrentUsers | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxConcurrentUsers)}
-                        {
+                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxConcurrentUsers | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxConcurrentUsers)} {
                             $null = Set-Item -Path WSMan:\localhost\Shell\MaxConcurrentUsers -Value $($ToolsConfig.WSManConfig.MaxConcurrentUsers) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxProcessesPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxProcessesPerShell)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxProcessesPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxProcessesPerShell)} {
                             $null = Set-Item -Path WSMan:\localhost\Shell\MaxProcessesPerShell -Value $($ToolsConfig.WSManConfig.MaxProcessesPerShell) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxMemoryPerShellMB | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxMemoryPerShellMB)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxMemoryPerShellMB | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxMemoryPerShellMB)} {
                             $null = Set-Item -Path WSMan:\localhost\Shell\MaxMemoryPerShellMB -Value $($ToolsConfig.WSManConfig.MaxMemoryPerShellMB) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxShellsPerUser | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxShellsPerUser)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Shell\MaxShellsPerUser | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.MaxShellsPerUser)} {
                             $null = Set-Item -Path WSMan:\localhost\Shell\MaxShellsPerUser -Value $($ToolsConfig.WSManConfig.MaxShellsPerUser) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
+
                         #Plugin Quota Settings
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentUsers | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxConcurrentUsers)}
-                        {
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentUsers | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxConcurrentUsers)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentUsers -Value $($ToolsConfig.WSManConfig.QuotasMaxConcurrentUsers) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxProcessesPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxProcessesPerShell)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxProcessesPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxProcessesPerShell)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxProcessesPerShell -Value $($ToolsConfig.WSManConfig.QuotasMaxProcessesPerShell) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShells | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxShells)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShells | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxShells)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShells -Value $($ToolsConfig.WSManConfig.QuotasMaxShells) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShellsPerUser | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxShellsPerUser)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShellsPerUser | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxShellsPerUser)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxShellsPerUser -Value $($ToolsConfig.WSManConfig.QuotasMaxShellsPerUser) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentCommandsPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxConcurrentCommandsPerShell)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentCommandsPerShell | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxConcurrentCommandsPerShell)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxConcurrentCommandsPerShell -Value $($ToolsConfig.WSManConfig.QuotasMaxConcurrentCommandsPerShell) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
-                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxMemoryPerShellMB | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxMemoryPerShellMB)}
-                        {
+
+                        {$(Get-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxMemoryPerShellMB | Select-Object -ExpandProperty Value) -notmatch $($ToolsConfig.WSManConfig.QuotasMaxMemoryPerShellMB)} {
                             $null = Set-Item -Path WSMan:\localhost\Plugin\microsoft.powershell\Quotas\MaxMemoryPerShellMB -Value $($ToolsConfig.WSManConfig.QuotasMaxMemoryPerShellMB) -ErrorAction SilentlyContinue -Force -WarningAction Ignore
                             $RestartWSMan = $true
                         }
                     }
 
                     #region Restart WinRM if any of the configurations changed
-                        If
-                        (
-                            $RestartWSMan
-                        )
-                        {
+                        If ($RestartWSMan) {
                             $null = Restart-Service -Name WinRM -Force
                         }
                     #endregion Restart WinRM if any of the configurations changed
@@ -1792,17 +1010,12 @@
     #region Copy Downloaded Tools
         $BluGenieInfo['ScriptSettings']['Log'] += "`nDetecting Needed Project files"
 
-        Switch
-        (
-            $null
-        )
-        {
-            {Test-Path -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon.exe') -ErrorAction SilentlyContinue}
-            {
+        Switch ($null) {
+            {Test-Path -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon.exe') -ErrorAction SilentlyContinue} {
                 $null = Copy-Item -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon.exe') -Destination $ToolsDirectory\SysMon\ -Force -ErrorAction SilentlyContinue
             }
-            {Test-Path -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon64.exe') -ErrorAction SilentlyContinue}
-            {
+
+            {Test-Path -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon64.exe') -ErrorAction SilentlyContinue} {
                 $null = Copy-Item -Path $('{0}\SysinternalsSuite\{1}' -f $ToolsDirectory, 'Sysmon64.exe') -Destination $ToolsDirectory\SysMon\ -Force -ErrorAction SilentlyContinue
             }
         }
@@ -1827,25 +1040,12 @@
     #endregion Detect Needed Project Files
 
     #region Dynamically Build Functions from .PS1 files
-        If
-        (
-            $BluGenieFunctions
-        )
-        {
-            [System.Collections.ArrayList]$ArrObjFunctions = @()
-
-            $BluGenieFunctions | ForEach-Object `
-            -Process `
-            {
-                Try
-                {
-                    . $($_ | Select-Object -ExpandProperty FullName)
-                    $BluGenieInfo['ScriptSettings']['LoadedFunctions'] += $($_ | Select-Object -ExpandProperty BaseName)
-                }
-                Catch
-                {
-                    #Nothing
-                }
+        If ($BluGenieFunctions) {
+            ForEach ($BluGenieFunctionItem in $BluGenieFunctions) {
+                Try {
+                    . $($BluGenieFunctionItem | Select-Object -ExpandProperty FullName)
+                    $BluGenieInfo['ScriptSettings']['LoadedFunctions'] += $($BluGenieFunctionItem | Select-Object -ExpandProperty BaseName)
+                } Catch {} #Nothing
             }
         }
     #endregion Dynamically Build Functions from .PS1 files
@@ -1954,6 +1154,7 @@
         $null = Set-Alias -Name 'Invoke-ThreadLock' -Value 'Invoke-BluGenieThreadLock' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Invoke-UnLoadAllProfileHives' -Value 'Invoke-BluGenieUnLoadAllProfileHives' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Invoke-WalkThrough' -Value 'Invoke-BluGenieWalkThrough' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Walk' -Value 'Invoke-BluGenieWalkThrough' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Invoke-Wipe' -Value 'Invoke-BluGenieWipe' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Join-Objects' -Value 'Join-BluGenieObjects' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'New-Command' -Value 'New-BluGenieCommand' -Force -Description 'BluGenie'

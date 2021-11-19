@@ -371,7 +371,7 @@ Get-Help will be called with the -Full parameter
         • [Latest Author]
             o   Michael Arroyo
         • [Latest Build Version]
-            o   21.06.2301
+            o   21.03.0401
         • [Comments]
             o
         • [PowerShell Compatibility]
@@ -392,9 +392,9 @@ Get-Help will be called with the -Full parameter
 #region Build Notes
 <#
 ~ Build Version Details "Moved from main help.  There is a Char limit and PSHelp could not read all the information correctly":
-    ~ 20.12.1101• [Michael Arroyo] Function Template
-    ~ 20.12.1401• [Michael Arroyo] Posted
-    ~ 21.03.0401• [Michael Arroyo] Updated the function to the new function template
+    o 20.12.1101• [Michael Arroyo] Function Template
+    o 20.12.1401• [Michael Arroyo] Posted
+    o 21.03.0401• [Michael Arroyo] Updated the function to the new function template
                 • [Michael Arroyo] Added more detailed information to the Return data
                 • [Michael Arroyo] Updated script based on the ( PSScriptAnalyzerSettings.psd1 )
                 • [Michael Arroyo] Moved Build Notes out of General Posh Help section
@@ -412,9 +412,7 @@ Get-Help will be called with the -Full parameter
                 • [Michael Arroyo] Updated the CommandlineOptions switch process to pull from the parameters directly instead of the
                     PSBoundParameters. This is cleaner and also allows you to test in real time.  The old way using PSBoundParameters
                     is only valid at runtime or debug mode.
-    ~ 21.05.1301• [Ravi Vinod Dubey] Change the script to check the AutoRuns tools in ..\Tools\Yara\.
-                • [Ravi Vinod Dubey] Change the $ToolPath from Temp to the $ToolsPathDirectory\Yara.
-    ~ 21.06.2301• [Michael Arroyo] Updated the ArrToolPath scriptblock
+                • [Michael Arroyo] 
 #>
 #endregion Build Notes
     [cmdletbinding()]
@@ -767,17 +765,42 @@ Get-Help will be called with the -Full parameter
 
     #region Tool Check
         $Error.Clear()
-		$CurTool = $Yara
-        $NestedToolPath = 'Yara'
-        $ResolveToolDirectory = Resolve-Path -Path $ToolsDirectory | Select-Object -ExpandProperty Path
 		$ArrToolPath = @(
-			$('{0}\{1}' -f $ToolPath, $CurTool),
-            $('{0}\Windows\Temp\{1}}' -f $env:SystemDrive, $CurTool),
-			$('{0}\{1}' -f $env:Temp, $CurTool),
-			".\Blubin\Modules\Tools\$NestedToolPath\$CurTool",
-            "..\Tools\$NestedToolPath\$CurTool",
-			$('{0}\{1}\{2}' -f $ResolveToolDirectory, $NestedToolPath, $CurTool)
+            $($ToolPath +'\' +$Yara),
+            $('{0}\Windows\Temp\{1}' -f $env:SystemDrive, $Yara),
+            $('{0}\{1}' -f $env:Temp, $Yara),
+            $('{0}\{1}' -f $(Get-Location | Select-Object -ExpandProperty Path), $Yara),
+            $($ToolsConfig.CopyTools  | Where-Object -FilterScript { $_.'Name' -eq $Yara } | Select-Object -ExpandProperty FullPath),
+            $('{0}\Tools\Yara\{1}' -f $(Get-Location | Select-Object -ExpandProperty Path), $Yara),
+            $('{0}\Dependencies\Tools\{1}' -f $(Get-Module | Where-Object -FilterScript { $_.Name -eq 'BluGenie' } | Select-Object `
+                -ExpandProperty Path | Split-Path -Parent), $Yara),
+            '..\Tools\Yara\'
 		)
+
+       <# $ArrToolPath | ForEach-Object `
+        -Process `
+        {
+            If
+            (
+                $curToolPath = $_ 
+            )
+            {
+                If
+                (
+                    -Not $HashReturn['InvokeYara']['ToolPath']
+                )
+                {
+                    if
+                    (
+                        Test-Path -Path $var -ErrorAction SilentlyContinue
+                    )
+                    {
+                        $HashReturn['InvokeYara']['ToolPath'] = $curToolPath
+                        $HashReturn['InvokeYara']['ToolCheck'] = 'TRUE'
+                    }
+                }
+            }
+        }#>
 
         foreach
         (
@@ -800,6 +823,7 @@ Get-Help will be called with the -Full parameter
 				}
 			}
 		}
+
     #endregion Tool Check
 
     #region Rules Check

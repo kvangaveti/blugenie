@@ -217,13 +217,11 @@ Function Get-BluGenieFirewallRules
                 • [Ravi Vinod Dubey] Added support for Caching
                 • [Ravi Vinod Dubey] Added support for Clearing Garbage collecting
                 • [Ravi Vinod Dubey] Added support for SQLite DB
+                • [Ravi Vinod Dubey] Added support for OutYaml
                 • [Ravi Vinod Dubey] Updated Process Query and Filtering
                 • [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended debugging info
                                     unless you manually set the -Verbose parameter.
-                • [Michael Arroyo] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
-                • [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -ForceDBUpdate is used
-                • [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -NewDBTable is used
-                • [Michael Arroyo] Updated the Dynamic parameter update region to disable -UpdateDB if running under PowerShell 2
+                • [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
 #>
 #endregion Build Notes
     [cmdletbinding()]
@@ -391,11 +389,6 @@ Function Get-BluGenieFirewallRules
             { $NewDBTable }
             {
                 $UpdateDB = $true
-            }
-
-            { $IsPosh2 }
-            {
-                $UpdateDB = $false
             }
         }
     #endregion Dynamic parameter update
@@ -657,7 +650,7 @@ Function Get-BluGenieFirewallRules
                 ElseIf
                 (
                     $UseCache
-                    )
+                 )
                 {
                     $HashReturn['GetFirewallRules']['Rulenames'] += Get-Content -Path $CachePath | ConvertFrom-Yaml -AllDocuments
                 }
@@ -697,6 +690,28 @@ Function Get-BluGenieFirewallRules
 			$null = $HashReturn['GetFirewallRules'].Remove('EndTime')
 			$null = $HashReturn['GetFirewallRules'].Remove('ElapsedTime')
 		}
+
+         #region Clean Up
+            If
+            (
+                $UseCache
+            )
+            {
+                If
+                (
+                    $RemoveCache
+                )
+                {
+                    If
+                    (
+                        -Not $($FormatView -eq 'Yaml')
+                    )
+                    {
+                        $null = Remove-Item -Path $CachePath -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        #endregion Clean Up
 
 		#region Output Type
 			$ResultSet = $($HashReturn['GetFirewallRules']['Rulenames'])
