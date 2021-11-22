@@ -1077,6 +1077,7 @@
         $null = Set-Alias -Name 'Settings' -Value 'Get-BluGenieSettings' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'SetTrap' -Value 'Set-BluGenieTrapping' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Set-Trap' -Value 'Set-BluGenieTrapping' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Trap' -Value 'Set-BluGenieTrapping' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'JobId' -Value 'Set-BluGenieJobId' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'SetDebug' -Value 'Set-BluGenieDebugger' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'JobTimeout' -Value 'Set-BluGenieJobTimeout' -Force -Description 'BluGenie'
@@ -1200,6 +1201,18 @@
         $null = Set-Alias -Name 'Update-FirewallProfileStatus' -Value 'Update-BluGenieFirewallProfileStatus' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Update-Sysinternals' -Value 'Update-BluGenieSysinternals' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Write-VerboseMsg' -Value 'Write-BluGenieVerboseMsg' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetVerbose' -Value 'Set-BluGenieVerbose' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Verbose' -Value 'Set-BluGenieVerbose' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetNoSetRes' -Value 'Set-BluGenieNoSetRes' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'NoSetRes' -Value 'Set-BluGenieNoSetRes' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetNoExit' -Value 'Set-BluGenieNoExit' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'NoExit' -Value 'Set-BluGenieNoExit' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetNoBanner' -Value 'Set-BluGenieNoBanner' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'NoBanner' -Value 'Set-BluGenieNoBanner' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetUpdateMods' -Value 'Set-BluGenieUpdateMods' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'UpdateMods' -Value 'Set-BluGenieUpdateMods' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'SetServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'ServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
     #endregion Set Alias's (This was done to move to the new module standard and also support Posh 2)
 
     #region Set Alias's (New Alias Name based on request)
@@ -1347,6 +1360,12 @@
         $null = Set-Alias -Name 'BGEvent' -Value 'Format-BluGenieEvent' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Set-ScriptCredentials' -Value 'Set-BluGenieScriptCredentials' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'SetCred' -Value 'Set-BluGenieScriptCredentials' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGVerbose' -Value 'Set-BluGenieVerbose' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGNoSetRes' -Value 'Set-BluGenieNoSetRes' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGNoExit' -Value 'Set-BluGenieNoExit' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGNoBanner' -Value 'Set-BluGenieNoBanner' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGUpdateMods' -Value 'Set-BluGenieUpdateMods' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
     #endregion Set Alias's (New Alias Name based on request)
 
     #region Dynamically Build Alias List

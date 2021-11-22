@@ -747,7 +747,7 @@ Options:
   /h,           /help             : Print this message and exit
   /db,          /debug            : Run PowerShell's transcript process to capture more output
   /nos,         /nosetres         : Do not update the frame of the Console.  Use the OS's default command prompt size.
-  /noe,         /bgnoexit         : Leave in the Console after executing an automated Job or command from the CLI.
+  /noe,         /bgnoexit         : Stay in the Console after executing an automated Job or command from the CLI.
   /nob,         /nobanner         : Do not display the BluGenie Welcome Screen.
   /hd,          /hidden           : Do not show the task window in the foreground view.
   /a=<str>,     /artifact=<str>   : Full file path to the JSON or YAML Artifact file

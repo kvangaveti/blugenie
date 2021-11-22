@@ -884,6 +884,132 @@
 									$BluGenieModulePath\BluGenie\Configs\Schema\
 			•	[Invoke-BluGeniePython]
 				o [Michael Arroyo] Set the $Global:ProgressPreference on Start and End of this funtion
+		* 21.11.0801:
+			[BluGenie]
+				o [Michael Arroyo] Updated HelpMnu.dat to include the new Help Module information
+				o [Michael Arroyo] Added Walk as an Alias for Invoke-WalkThrough
+				o [Michael Arroyo] Added Trap to the Alias list (This is to support the BluGenie Console Settings functions)
+				o [Michael Arroyo] Added new function [Set-BGVerbose] to manage the Verbose Setting value in the BluGenie Console
+				o [Michael Arroyo] Added new function [Set-BluGenieNoSetRes] to manage the NoSetRes Setting value in the BluGenie Console
+				o [Michael Arroyo] Added new function [Set-BluGenieNoExit] to manage the NoExit Setting value in the BluGenie Console
+				o [Michael Arroyo] Added new function [Set-BluGenieNoBanner] to manage the NoBanner Setting value in the BluGenie Console
+				o [Michael Arroyo] Added new function [Set-BluGenieUpdateMods] to manage the UpdateMods Setting value in the BluGenie Console
+				o [Michael Arroyo] Added new function [Set-BluGenieServiceJob] to manage the ServiceJoib Setting value in the BluGenie Console
+			[BluGenie.psm1]
+				o [Michael Arroyo] Consolidated Code (Removed 800 plus lines of code with this update)
+				o [Michael Arroyo] Updated all ForEach-Object references to ForEach to determine speed updates (only gained 3 seconds in load time)
+			[Set-BluGenieJobId]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+			[Set-BluGenieCommands]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+			[Set-BluGenieParallelCommands]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+			[Set-BluGeniePostCommands]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+			[Set-BluGenieSystems]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through Function to the newest standard
+			[Set-BluGenieThreadCount]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through
+			[Get-BluGenieAutoRuns]
+				o [Ravi Vinod Dubey] Moved Build Notes out of General Posh Help section
+				o [Ravi Vinod Dubey] Added support for Caching
+				o [Ravi Vinod Dubey] Added support for Clearing Garbage collecting
+				o [Ravi Vinod Dubey] Added support for SQLite DB
+				o [Ravi Vinod Dubey] Updated Process Query and Filtering
+				o [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended debugging info
+					unless you manually set the -Verbose parameter.
+				o [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+				o [Ravi Vinod Dubey] Change the script to check the AutoRuns tools in ..\Tools\SysinternalsSuite\
+			[Get-BluGenieFirewallRules]
+				o [Michael Arroyo] Updated script based on the ( PSScriptAnalyzerSettings.psd1 )
+				o [Michael Arroyo] Moved Build Notes out of General Posh Help section
+				o [Ravi Vinod Dubey] Added support for Caching
+				o [Ravi Vinod Dubey] Added support for Clearing Garbage collecting
+				o [Ravi Vinod Dubey] Added support for SQLite DB
+				o [Ravi Vinod Dubey] Added support for OutYaml
+				o [Ravi Vinod Dubey] Updated Process Query and Filtering
+				o [Ravi Vinod Dubey] Added support for the -Verbose parameter.  The query return will no longer shows extended debugging info
+					unless you manually set the -Verbose parameter.
+				o [Ravi Vinod Dubey] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+			[Invoke-BluGenieYara]
+				o [Michael Arroyo] Updated the function to the new function template
+				o [Michael Arroyo] Added more detailed information to the Return data
+				o [Michael Arroyo] Updated script based on the ( PSScriptAnalyzerSettings.psd1 )
+				o [Michael Arroyo] Moved Build Notes out of General Posh Help section
+				o [Michael Arroyo] Added support for Caching
+				o [Michael Arroyo] Added support for Clearing Garbage collecting
+				o [Michael Arroyo] Added support for SQLite DB
+				o [Michael Arroyo] Updated Service Query and Filtering (10x faster when processing)
+				o [Michael Arroyo] Added support for the -Verbose parameter.  The query return will no longer shows extended debugging info
+					unless you manually set the -Verbose parameter.
+				o [Michael Arroyo] Added support for the -NewDBTable parameter.  This will delete and recreate the DB Table.
+				o [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -ForceDBUpdate is used
+				o [Michael Arroyo] Updated the Dynamic parameter update region to enable -UpdateDB if -NewDBTable is used
+				o [Michael Arroyo] Updated the Dynamic parameter update region to disable -UpdateDB if running under PowerShell 2
+				o [Michael Arroyo] Tools path updated with $('{0}\Tools\Yara\{1}' -f $(Get-Location | Select-Object -ExpandProperty Path), $Yara)
+				o [Michael Arroyo] Updated the CommandlineOptions switch process to pull from the parameters directly instead of the
+					PSBoundParameters. This is cleaner and also allows you to test in real time.  The old way using PSBoundParameters
+					is only valid at runtime or debug mode.
+			[Set-BluGenieDebugger]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through
+			[PSScriptAnalyzerSettings]
+				o [Michael Arroyo] Updated to look like the below.
+									PSPlaceCloseBrace = @{
+										Enable             = $true
+										NoEmptyLineBefore  = $true
+										IgnoreOneLineBlock = $false
+										NewLineAfter       = $false
+									}
+									PSPlaceOpenBrace = @{
+										Enable             = $true
+										OnSameLine         = $true
+										NewLineAfter       = $false
+										IgnoreOneLineBlock = $false
+									}
+			[Set-BluGenieJobTimeout]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through
+			[Set-BluGenieTrapping]
+				o [Michael Arroyo] Consolidated Code
+				o [Michael Arroyo] Updated the Parameter and Example Help Header Information
+				o [Michael Arroyo] Updated the Description Information for Help content
+				o [Michael Arroyo] Updated the Walk Through
+			[Set-BGVerbose]
+				o [Michael Arroyo] (Initial Post) Set-BluGenieVerbose is an add-on to manage the Verbose status in the BluGenie Console.
+			[Set-BluGenieNoSetRes]
+				o [Michael Arroyo] Set the NoSetRes value so to not update the frame of the Console.  Use the OS's default command prompt size.
+			[Set-BluGenieNoExit]
+				o [Michael Arroyo] Setting this option will stay in the Console after executing an automated Job or command from the CLI.
+			[Set-BluGenieNoBanner]
+				o [Michael Arroyo] Do not display the BluGenie Welcome Screen.
+			[Set-BluGenieUpdateMods]
+				o [Michael Arroyo] Force all managed BluGenie files and folders to be updated on the remote machine
+			[Set-BluGenieServiceJob]
+				o [Michael Arroyo] Send the artifact to the remote machine to be run by the BluGenie Service.
+									Note: This will only work if the BluGenie service is running. If not, the artifact will fallback to the remote connection execution process.
 #>
 @{
 
@@ -892,13 +1018,13 @@
 	ModuleToProcess = 'BluGenie.psm1'
 
 	# Version number of this module.
-	ModuleVersion = '21.05.1706'
+	ModuleVersion = '21.11.0801'
 
 	# ID used to uniquely identify this module
 	GUID = '5f602af5-3b61-4513-95aa-899a4ba069b9'
 
 	# Author of this module
-	Author = 'Michael Arroyo'
+	Author = 'BluSapphire'
 
 	# Company or vendor of this module
 	CompanyName = 'BluSapphire'

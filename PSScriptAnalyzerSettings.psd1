@@ -31,15 +31,15 @@
         }
         PSPlaceCloseBrace = @{
             Enable             = $true
-            NoEmptyLineBefore  = $false
-            IgnoreOneLineBlock = $true
-            NewLineAfter       = $true
+            NoEmptyLineBefore  = $true
+            IgnoreOneLineBlock = $false
+            NewLineAfter       = $false
         }
         PSPlaceOpenBrace                    = @{
             Enable             = $true
-            OnSameLine         = $false
-            NewLineAfter       = $true
-            IgnoreOneLineBlock = $true
+            OnSameLine         = $true
+            NewLineAfter       = $false
+            IgnoreOneLineBlock = $false
         }
         PSUseCompatibleCmdlets              = @{
             'compatibility' = @(
