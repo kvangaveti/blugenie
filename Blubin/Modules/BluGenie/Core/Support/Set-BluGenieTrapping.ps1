@@ -67,7 +67,7 @@
         #>
 
         [CmdletBinding(ConfirmImpact='Medium')]
-        [Alias('SetTrap','Set-Trap')]
+        [Alias('SetTrap','Set-Trap','Trap')]
         Param
         (
             [Switch]$SetTrue,
