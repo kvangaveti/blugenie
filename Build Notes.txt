@@ -5405,9 +5405,12 @@ Posted Build#21.11.0801
 		o [Michael Arroyo] Added new function [Set-BluGenieNoBanner] to manage the NoBanner Setting value in the BluGenie Console
 		o [Michael Arroyo] Added new function [Set-BluGenieUpdateMods] to manage the UpdateMods Setting value in the BluGenie Console
 		o [Michael Arroyo] Added new function [Set-BluGenieServiceJob] to manage the ServiceJoib Setting value in the BluGenie Console
+		o [Michael Arroyo] Added new function [Set-BluGenieCores] to manage the Cores Setting value in the BluGenie Console
 	[BluGenie.psm1]
 		o [Michael Arroyo] Consolidated Code (Removed 800 plus lines of code with this update)
 		o [Michael Arroyo] Updated all ForEach-Object references to ForEach to determine speed updates (only gained 3 seconds in load time)
+	[BluGenie.psm1]
+		o [Michael Arroyo] Updated the /Core CLI parameter help information.
 	[Set-BluGenieJobId]
 		o [Michael Arroyo] Consolidated Code
 		o [Michael Arroyo] Updated the Parameter and Example Help Header Information
@@ -5520,3 +5523,7 @@ Posted Build#21.11.0801
 	[Set-BluGenieServiceJob]
 		o [Michael Arroyo] Send the artifact to the remote machine to be run by the BluGenie Service.
 							Note: This will only work if the BluGenie service is running. If not, the artifact will fallback to the remote connection execution process.	
+	[Set-BluGenieCores]
+		o [Michael Arroyo] Set-BluGenieCores is an add-on to control how many Cores to use while in the BluGenie Console
+							Select the amount of cores you want this job to use.  Default is (ALL).
+							Core information is pulled from the ($env:NUMBER_OF_PROCESSORS) variable.

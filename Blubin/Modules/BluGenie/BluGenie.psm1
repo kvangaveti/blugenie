@@ -1213,6 +1213,8 @@
         $null = Set-Alias -Name 'UpdateMods' -Value 'Set-BluGenieUpdateMods' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'SetServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'ServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-Cores' -Value 'Set-BluGenieCores' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Cores' -Value 'Set-BluGenieCores' -Force -Description 'BluGenie'
     #endregion Set Alias's (This was done to move to the new module standard and also support Posh 2)
 
     #region Set Alias's (New Alias Name based on request)
@@ -1366,6 +1368,7 @@
         $null = Set-Alias -Name 'Set-BGNoBanner' -Value 'Set-BluGenieNoBanner' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Set-BGUpdateMods' -Value 'Set-BluGenieUpdateMods' -Force -Description 'BluGenie'
         $null = Set-Alias -Name 'Set-BGServiceJob' -Value 'Set-BluGenieServiceJob' -Force -Description 'BluGenie'
+        $null = Set-Alias -Name 'Set-BGCores' -Value 'Set-BluGenieCores' -Force -Description 'BluGenie'
     #endregion Set Alias's (New Alias Name based on request)
 
     #region Dynamically Build Alias List

@@ -759,7 +759,7 @@ Options:
                                         To parse a domain group with a specific domain name, append to the end of the Group name ":Domain.com"
                                             o Example: group:S_Wrk_Posh3Systems:TestLab.com
                                                 o Note:  The domain needs to be a trusted domain
-  /c=<int>,     /cores=<int>      : Select the amount of cores you wan this job to use.  Default is (ALL)
+  /c=<int>,     /cores=<int>      : Select the amount of cores you want this job to use.  Default is (ALL)
   /p=<int>,     /priority=<int>   : Select the priority level of the cuurent job. Default is (Normal)
                                         0 = Low
                                         1 = Below Normal
